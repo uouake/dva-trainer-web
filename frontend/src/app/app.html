@@ -1,0 +1,23 @@
+<div class="app-shell" [class.fullscreen-exam]="isFullscreenExam">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/dashboard">
+      <div class="brand-icon">☁️</div>
+      <div>
+        <div class="brand-title">AWS DVA-C02</div>
+        <div class="brand-sub font-mono">Study Hub</div>
+      </div>
+    </a>
+
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/routine" routerLinkActive="active">Routine Quotidienne</a>
+      <a routerLink="/exam" routerLinkActive="active">Simulateur d'Examen</a>
+    </nav>
+
+    <div class="sidebar-footer font-mono">DVA-C02 · v1.0</div>
+  </aside>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

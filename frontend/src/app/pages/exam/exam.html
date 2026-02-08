@@ -1,0 +1,143 @@
+<div class="exam-root">
+  <!-- Intro (light) -->
+  <div *ngIf="phase === 'intro'" class="intro">
+    <a routerLink="/dashboard" class="back muted">← Dashboard</a>
+
+    <h1>Simulateur d'Examen</h1>
+    <p class="muted">Conditions réelles de l'examen AWS DVA-C02. Prêt ?</p>
+
+    <div *ngIf="loading">Chargement…</div>
+    <div *ngIf="error" class="error">Erreur: {{ error }}</div>
+
+    <div class="card intro-card">
+      <div class="grid-2">
+        <div class="mini muted">
+          <div class="mini-value font-mono">65</div>
+          <div class="mini-label">Questions</div>
+        </div>
+        <div class="mini muted">
+          <div class="mini-value font-mono">130 min</div>
+          <div class="mini-label">Durée</div>
+        </div>
+        <div class="mini muted">
+          <div class="mini-value font-mono">72%</div>
+          <div class="mini-label">Score de passage</div>
+        </div>
+        <div class="mini muted">
+          <div class="mini-value font-mono">QCM</div>
+          <div class="mini-label">Format</div>
+        </div>
+      </div>
+
+      <div class="bullets muted">
+        <div>• Vous pouvez naviguer librement entre les questions</div>
+        <div>• Marquez les questions pour les revoir plus tard</div>
+        <div>• Le chronomètre démarre immédiatement</div>
+      </div>
+    </div>
+
+    <button class="btn-primary w-full" (click)="startExam()" [disabled]="loading">Commencer l'examen</button>
+  </div>
+
+  <!-- Exam (dark) -->
+  <div *ngIf="phase === 'exam'" class="exam-mode runner">
+    <header class="runner-top">
+      <div class="left">
+        <span class="font-mono muted">{{ index + 1 }}/{{ questions.length }}</span>
+        <span class="muted"><span class="primary">{{ answeredCount() }}</span> répondu</span>
+      </div>
+
+      <div class="timer font-mono">⏱ {{ formatTime(secondsLeft) }}</div>
+
+      <div class="right">
+        <button class="icon" (click)="showGrid = !showGrid" [class.icon-active]="showGrid">▦</button>
+        <button class="btn-primary small" (click)="showSubmitConfirm = true">Terminer</button>
+      </div>
+    </header>
+
+    <div class="runner-body">
+      <div class="main">
+        <div *ngIf="current as q" class="exam-card card">
+          <div class="qhead">
+            <span class="badge font-mono muted">{{ index + 1 }}/{{ questions.length }}</span>
+            <span class="pill">Security</span>
+            <button class="flag" (click)="toggleFlag()">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
+          </div>
+
+          <pre class="stem">{{ q.stem }}</pre>
+
+          <div class="choices">
+            <button
+              class="choice"
+              *ngFor="let k of choiceKeys(q)"
+              (click)="pick(k)"
+              [class.selected]="chosenFor(q) === k"
+            >
+              <div class="choice-k">{{ k }}</div>
+              <div class="choice-body">{{ q.choices[k] }}</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav">
+          <button class="ghost" (click)="prev()" [disabled]="index === 0">← Précédent</button>
+          <button class="ghost primary-ghost" (click)="next()" [disabled]="index >= questions.length - 1">Suivant →</button>
+        </div>
+      </div>
+
+      <aside *ngIf="showGrid" class="side card exam-card">
+        <div class="side-title">Navigation</div>
+        <div class="grid">
+          <button
+            *ngFor="let q of questions; let i = index"
+            (click)="goTo(i)"
+            [class.current]="i === index"
+            [class.answered]="chosenFor(q) !== null"
+            [class.flagged]="isFlagged(q)"
+          >
+            {{ i + 1 }}
+          </button>
+        </div>
+        <div class="legend muted">
+          <div><span class="dot answered"></span> Répondu</div>
+          <div><span class="dot"></span> Non répondu</div>
+          <div><span class="dot flagged"></span> Marqué</div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Submit confirm -->
+    <div *ngIf="showSubmitConfirm" class="modal">
+      <div class="modal-card card exam-card">
+        <h3>Terminer l'examen ?</h3>
+        <p class="muted">{{ answeredCount() }}/{{ questions.length }} questions répondues</p>
+        <div class="modal-actions">
+          <button class="ghost" (click)="showSubmitConfirm = false">Continuer</button>
+          <button class="btn-primary" (click)="submit()">Terminer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results (dark) -->
+  <div *ngIf="phase === 'results'" class="exam-mode results">
+    <div class="card exam-card results-card">
+      <h1>Résultat</h1>
+      <p>Score: <strong>{{ score().correct }}/{{ score().total }}</strong> ({{ score().percent }}%)</p>
+
+      <details>
+        <summary>Voir les questions ratées</summary>
+        <ol>
+          <li *ngFor="let q of questions">
+            <div *ngIf="chosenFor(q) && chosenFor(q) !== q.answer">
+              <strong>Q{{ q.questionNumber }}</strong> — Ta réponse: {{ chosenFor(q) }} | Bonne réponse: {{ q.answer }}
+              <p class="muted">{{ q.frExplanation }}</p>
+            </div>
+          </li>
+        </ol>
+      </details>
+
+      <button class="btn-primary" (click)="phase = 'intro'">Retour</button>
+    </div>
+  </div>
+</div>

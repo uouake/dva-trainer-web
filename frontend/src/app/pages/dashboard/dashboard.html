@@ -1,0 +1,53 @@
+<div class="dash">
+  <!-- Header -->
+  <div class="header">
+    <h1>Bonjour 👋</h1>
+    <p class="muted">Prêt à préparer votre certification AWS DVA-C02 ?</p>
+  </div>
+
+  <div *ngIf="loading">Chargement…</div>
+  <div *ngIf="error" class="error">Erreur: {{ error }}</div>
+
+  <!-- Stats -->
+  <div class="stats" *ngIf="!loading && !error">
+    <div class="stat card" *ngFor="let s of stats">
+      <div class="stat-value font-mono">{{ s.value }}</div>
+      <div class="stat-label muted">{{ s.label }}</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="actions" *ngIf="!loading && !error">
+    <a
+      class="action card"
+      *ngFor="let a of actions"
+      [routerLink]="a.to"
+      [class.action-primary]="a.accent === 'primary'"
+      [class.action-success]="a.accent === 'success'"
+    >
+      <div class="action-top">
+        <div class="action-title">{{ a.title }}</div>
+        <div class="chev">›</div>
+      </div>
+      <div class="action-desc muted">{{ a.description }}</div>
+      <div class="action-cta">{{ a.cta }}</div>
+    </a>
+  </div>
+
+  <!-- Domain progress -->
+  <div class="card domain" *ngIf="!loading && !error">
+    <h2>Progression par domaine</h2>
+
+    <div class="domain-row" *ngFor="let d of domains">
+      <div class="domain-head">
+        <div class="domain-name">{{ d.name }}</div>
+        <div class="domain-count muted font-mono">{{ d.questions }} questions</div>
+      </div>
+      <div class="bar">
+        <div class="bar-fill" [style.width.%]="d.progress"></div>
+      </div>
+    </div>
+
+    <p class="muted domain-hint">Commencez à pratiquer pour voir votre progression ici</p>
+  </div>
+</div>

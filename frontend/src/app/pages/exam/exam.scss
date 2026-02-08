@@ -1,0 +1,367 @@
+.exam-root {
+  /* Root wrapper: no max-width, so exam runner can be true fullscreen */
+}
+
+/* Intro page stays centered like in the reference UI */
+.intro {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 4px;
+}
+
+.back {
+  display: inline-flex;
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.intro-card {
+  padding: 18px;
+  border-radius: 14px;
+  margin: 18px 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mini {
+  text-align: center;
+  background: hsl(var(--muted));
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.mini-value {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.mini-label {
+  font-size: 12px;
+}
+
+.bullets {
+  border-top: 1px solid hsl(var(--border));
+  margin-top: 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Runner (dark) */
+.runner {
+  /* True fullscreen */
+  width: 100vw;
+  min-height: 100vh;
+}
+
+.runner-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 12px 14px;
+  border-bottom: 1px solid hsl(var(--exam-border));
+  background: hsl(var(--exam-bg));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.runner-top .left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.primary {
+  color: hsl(var(--primary));
+  font-weight: 700;
+}
+
+.timer {
+  color: hsl(var(--exam-foreground));
+}
+
+.runner-top .right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-primary.small {
+  padding: 0.55rem 0.8rem;
+  border-radius: 12px;
+}
+
+.icon {
+  border: 1px solid hsl(var(--exam-border));
+  background: transparent;
+  color: hsl(var(--exam-muted-foreground));
+  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+}
+
+.icon-active {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary) / 0.35);
+}
+
+.runner-body {
+  display: flex;
+  gap: 18px;
+  padding: 18px;
+  width: 100%;
+}
+
+.main {
+  flex: 1;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.exam-card {
+  background: hsl(var(--exam-card));
+  color: hsl(var(--exam-card-foreground));
+  border-color: hsl(var(--exam-border));
+}
+
+.qhead {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.flag {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: hsl(var(--exam-muted-foreground));
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: hsl(var(--exam-muted));
+  border: 1px solid hsl(var(--exam-border));
+}
+
+.pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.15);
+  color: hsl(var(--primary));
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.stem {
+  white-space: pre-wrap;
+  font-family: system-ui;
+  background: hsl(var(--exam-muted));
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--exam-border));
+}
+
+.choices {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.choice {
+  text-align: left;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--exam-border));
+  background: transparent;
+  color: hsl(var(--exam-card-foreground));
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.choice:hover {
+  border-color: hsl(var(--primary) / 0.4);
+}
+
+.choice-k {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: hsl(var(--exam-muted));
+  border: 1px solid hsl(var(--exam-border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.choice.selected {
+  outline: 2px solid hsl(var(--primary) / 0.35);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.ghost {
+  background: transparent;
+  border: none;
+  color: hsl(var(--exam-muted-foreground));
+  cursor: pointer;
+  padding: 10px 8px;
+  border-radius: 12px;
+}
+
+.ghost:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.primary-ghost {
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+}
+
+.side {
+  width: 280px;
+  padding: 14px;
+  border-radius: 14px;
+  height: fit-content;
+}
+
+.side-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.grid button {
+  background: transparent;
+  border: 1px solid hsl(var(--exam-border));
+  color: hsl(var(--exam-muted-foreground));
+  border-radius: 10px;
+  padding: 7px 0;
+  cursor: pointer;
+}
+
+.grid button.current {
+  border-color: hsl(var(--primary));
+  color: hsl(var(--primary));
+}
+
+.grid button.answered {
+  border-color: hsl(var(--primary) / 0.55);
+}
+
+.grid button.flagged {
+  border-color: hsl(38 92% 50%);
+}
+
+.legend {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: hsl(var(--exam-muted));
+  border: 1px solid hsl(var(--exam-border));
+  margin-right: 6px;
+}
+
+.dot.answered {
+  background: hsl(var(--primary) / 0.25);
+  border-color: hsl(var(--primary) / 0.55);
+}
+
+.dot.flagged {
+  background: hsl(38 92% 50% / 0.25);
+  border-color: hsl(38 92% 50%);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: hsl(var(--exam-bg) / 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 18px;
+  border-radius: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.results {
+  /* Ensure the results view is fully in dark mode with no white gap. */
+  min-height: 100vh;
+  padding: 18px;
+}
+
+.results-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 18px;
+  border-radius: 14px;
+}
+
+@media (max-width: 900px) {
+  .runner-body {
+    flex-direction: column;
+  }
+  .side {
+    width: 100%;
+  }
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}

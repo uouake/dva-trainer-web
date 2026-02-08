@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Global design tokens inspired by aws-exam-buddy (screenshots + repo).
+   We use HSL channels so we can easily reuse the same variables like Tailwind/shadcn.
+*/
+:root {
+  --background: 220 20% 97%;
+  --foreground: 222 20% 12%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 20% 12%;
+
+  --primary: 25 95% 53%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 220 16% 92%;
+  --secondary-foreground: 222 20% 12%;
+
+  --muted: 220 14% 94%;
+  --muted-foreground: 220 10% 46%;
+
+  --border: 220 13% 89%;
+  --ring: 25 95% 53%;
+
+  --radius: 0.625rem;
+
+  /* Exam (dark) */
+  --exam-bg: 222 20% 8%;
+  --exam-foreground: 220 14% 90%;
+  --exam-card: 222 18% 14%;
+  --exam-card-foreground: 220 14% 90%;
+  --exam-border: 222 16% 22%;
+  --exam-muted: 222 16% 20%;
+  --exam-muted-foreground: 220 10% 55%;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Small utility helpers */
+.card {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+}
+
+.muted {
+  color: hsl(var(--muted-foreground));
+}
+
+.btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+}
+
+.exam-mode {
+  background: hsl(var(--exam-bg));
+  color: hsl(var(--exam-foreground));
+}

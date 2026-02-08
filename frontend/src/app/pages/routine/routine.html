@@ -1,0 +1,90 @@
+<div class="routine">
+  <!-- Intro -->
+  <div *ngIf="phase === 'intro'" class="intro">
+    <a routerLink="/dashboard" class="back muted">← Dashboard</a>
+
+    <h1>Routine Quotidienne</h1>
+    <p class="muted">Session rapide avec feedback immédiat et explications en français. Choisissez le nombre de questions.</p>
+
+    <div *ngIf="loading">Chargement…</div>
+    <div *ngIf="error" class="error">Erreur: {{ error }}</div>
+
+    <div class="pick-grid" *ngIf="!loading">
+      <button class="pick card" (click)="startSession(5)">
+        <div class="pick-value font-mono">5</div>
+        <div class="pick-label muted">questions</div>
+        <div class="pick-play muted">▶</div>
+      </button>
+
+      <button class="pick card" (click)="startSession(10)">
+        <div class="pick-value font-mono">10</div>
+        <div class="pick-label muted">questions</div>
+        <div class="pick-play muted">▶</div>
+      </button>
+
+      <button class="pick card" (click)="startSession(15)">
+        <div class="pick-value font-mono">15</div>
+        <div class="pick-label muted">questions</div>
+        <div class="pick-play muted">▶</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Session -->
+  <div *ngIf="phase === 'session' && current as q" class="session">
+    <div class="progress">
+      <div class="progress-head">
+        <span class="muted">Question {{ index + 1 }} sur {{ questions.length }}</span>
+        <span class="muted font-mono">{{ answeredCount() }}/{{ questions.length }} répondu</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+    </div>
+
+    <div class="qcard card">
+      <div class="badge-row">
+        <span class="badge muted font-mono">{{ index + 1 }}/{{ questions.length }}</span>
+        <span class="pill">Development</span>
+      </div>
+
+      <pre class="stem">{{ q.stem }}</pre>
+
+      <div class="choices">
+        <button
+          class="choice"
+          *ngFor="let k of choiceKeys(q)"
+          (click)="pick(k)"
+          [class.selected]="selectedChoice === k"
+          [class.correct]="showFeedback && k === q.answer"
+          [class.wrong]="showFeedback && selectedChoice === k && k !== q.answer"
+        >
+          <div class="choice-k">{{ k }}</div>
+          <div class="choice-body">{{ q.choices[k] }}</div>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="showFeedback" class="feedback card">
+      <div>
+        <strong *ngIf="isCorrect()">✅ Correct</strong>
+        <strong *ngIf="!isCorrect()">❌ Incorrect</strong>
+        <span> — Réponse: <code>{{ q.answer }}</code></span>
+      </div>
+      <div class="muted" style="margin-top:6px">{{ q.frExplanation }}</div>
+
+      <div class="next-row">
+        <button class="btn-primary" (click)="next()">
+          {{ index < questions.length - 1 ? 'Question suivante →' : 'Voir les résultats →' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="phase === 'results'" class="results">
+    <h1>Résultats</h1>
+    <p class="muted">MVP: les résultats détaillés arrivent avec les attempts persistés.</p>
+    <button class="btn-primary" (click)="backToIntro()">Recommencer</button>
+  </div>
+</div>

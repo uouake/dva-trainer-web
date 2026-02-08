@@ -1,0 +1,114 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  width: 256px;
+  padding: 16px;
+  border-right: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-icon {
+  height: 32px;
+  width: 32px;
+  border-radius: 12px;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.brand-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brand-sub {
+  font-size: 10px;
+  color: hsl(var(--muted-foreground));
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: hsl(var(--foreground));
+  transition: background 120ms ease, color 120ms ease, border 120ms ease;
+}
+
+.nav a:hover {
+  background: hsl(var(--muted));
+}
+
+.nav a.active {
+  background: hsl(var(--primary) / 0.10);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.20);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px;
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 220px;
+  }
+}
+
+.fullscreen-exam .sidebar {
+  display: none;
+}
+
+.fullscreen-exam .content {
+  padding: 0;
+}
+
+@media (max-width: 720px) {
+  .sidebar {
+    display: none;
+  }
+  .content {
+    padding: 16px;
+  }
+
+  /* In fullscreen exam we still want zero padding */
+  .fullscreen-exam .content {
+    padding: 0;
+  }
+}

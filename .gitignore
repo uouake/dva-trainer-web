@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Angular
+/dist/
+/.angular/
+
+# NestJS / TypeScript
+/dist/
+
+# Env
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.tgz
