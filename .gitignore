@@ -9,11 +9,12 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Angular
-/dist/
-/.angular/
+.angular/
+dist/
 
 # NestJS / TypeScript
-/dist/
+backend/dist/
+backend/*.tsbuildinfo
 
 # Env
 .env
