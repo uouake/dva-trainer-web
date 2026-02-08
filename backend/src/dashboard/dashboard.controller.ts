@@ -54,7 +54,9 @@ export class DashboardController {
       .where('a.userId = :userId', { userId })
       .andWhere('a.isCorrect = false')
       .groupBy('q.conceptKey')
-      .orderBy('wrongCount', 'DESC')
+      // Postgres folds unquoted identifiers to lowercase; ordering by the alias can break.
+      // Order by the aggregate expression instead.
+      .orderBy('COUNT(*)', 'DESC')
       .limit(5)
       .getRawMany<{ conceptKey: string; wrongCount: string }>();
 
