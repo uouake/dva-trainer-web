@@ -21,19 +21,22 @@ export class DashboardController {
     private readonly questionsRepo: Repository<QuestionEntity>,
   ) {}
 
-  @Get('overview')
-  async overview(@Query('userId') userId: string) {
+  private validateUserId(userId: string) {
     if (!userId) {
       throw new BadRequestException('Missing userId');
     }
 
-    // Minimal UUID format validation (no auth yet).
     const uuidOk = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
       userId,
     );
     if (!uuidOk) {
       throw new BadRequestException('Invalid userId (expected UUID)');
     }
+  }
+
+  @Get('overview')
+  async overview(@Query('userId') userId: string) {
+    this.validateUserId(userId);
 
     const totalAttempts = await this.attemptsRepo.count({ where: { userId } });
     const correctAttempts = await this.attemptsRepo.count({ where: { userId, isCorrect: true } });
@@ -73,5 +76,36 @@ export class DashboardController {
         wrongCount: Number(w.wrongCount),
       })),
     };
+  }
+
+  @Get('domains')
+  async domains(@Query('userId') userId: string) {
+    this.validateUserId(userId);
+
+    // Aggregate attempts by question.domainKey
+    const rows = await this.attemptsRepo
+      .createQueryBuilder('a')
+      .innerJoin(QuestionEntity, 'q', 'q.id = a.questionId')
+      .select('q.domainKey', 'domainKey')
+      .addSelect('COUNT(*)', 'attempts')
+      .addSelect('SUM(CASE WHEN a.isCorrect THEN 1 ELSE 0 END)', 'correct')
+      .where('a.userId = :userId', { userId })
+      .groupBy('q.domainKey')
+      .orderBy('q.domainKey', 'ASC')
+      .getRawMany<{ domainKey: string; attempts: string; correct: string }>();
+
+    const items = rows.map((r) => {
+      const attempts = Number(r.attempts);
+      const correct = Number(r.correct);
+      const successRate = attempts ? Math.round((correct / attempts) * 100) : null;
+      return {
+        domainKey: r.domainKey ?? 'unknown',
+        attempts,
+        correct,
+        successRate,
+      };
+    });
+
+    return { ok: true, items } as const;
   }
 }

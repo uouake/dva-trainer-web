@@ -56,6 +56,16 @@ export type DashboardOverview = {
   weakConcepts: Array<{ conceptKey: string; wrongCount: number }>;
 };
 
+export type DashboardDomains = {
+  ok: true;
+  items: Array<{
+    domainKey: string;
+    attempts: number;
+    correct: number;
+    successRate: number | null;
+  }>;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -98,5 +108,10 @@ export class DvaApi {
   dashboardOverview(userId: string) {
     const params = new HttpParams().set('userId', userId);
     return this.http.get<DashboardOverview>(`${this.base}/api/dashboard/overview`, { params });
+  }
+
+  dashboardDomains(userId: string) {
+    const params = new HttpParams().set('userId', userId);
+    return this.http.get<DashboardDomains>(`${this.base}/api/dashboard/domains`, { params });
   }
 }
