@@ -105,6 +105,12 @@
   line-height: 1;
 }
 
+.reset-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0 0;
+}
+
 .domain {
   padding: 18px;
   border-radius: 14px;
