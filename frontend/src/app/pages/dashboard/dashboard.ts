@@ -75,6 +75,12 @@ export class Dashboard {
     private readonly userIdService: UserIdService,
   ) {
     this.userId = this.userIdService.getOrCreate();
+    this.load();
+  }
+
+  load() {
+    this.loading = true;
+    this.error = null;
 
     // Load real stats.
     this.api.dashboardOverview(this.userId).subscribe({
@@ -129,6 +135,27 @@ export class Dashboard {
       error: (err) => {
         this.error = err?.message ?? String(err);
         this.loading = false;
+      },
+    });
+  }
+
+  resetKpis() {
+    if (!confirm('Remettre à zéro vos statistiques (attempts) ?')) return;
+
+    this.api.dashboardReset(this.userId).subscribe({
+      next: () => {
+        this.weakConcepts = [];
+        this.domainItems = [];
+        this.stats = [
+          { label: 'Questions pratiquées', value: '0', tone: 'primary' },
+          { label: 'Taux de réussite', value: '—', tone: 'success' },
+          { label: "Temps d'étude", value: '—', tone: 'warning' },
+          { label: 'Série en cours', value: '—', tone: 'primary' },
+        ];
+        this.load();
+      },
+      error: (err) => {
+        this.error = err?.message ?? String(err);
       },
     });
   }

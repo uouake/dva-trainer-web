@@ -60,7 +60,7 @@
         <div *ngIf="current as q" class="exam-card card">
           <div class="qhead">
             <span class="badge font-mono muted">{{ index + 1 }}/{{ questions.length }}</span>
-            <span class="pill">Topic {{ q.topic }}</span>
+            <span class="pill">{{ (q.domainKey ?? 'unknown') === 'development' ? 'Développement' : (q.domainKey ?? 'unknown') === 'security' ? 'Security' : (q.domainKey ?? 'unknown') === 'deployment' ? 'Deployment' : (q.domainKey ?? 'unknown') === 'troubleshooting' ? 'Troubleshooting & Optimization' : 'Unknown' }}</span>
             <button class="flag" (click)="toggleFlag()">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
           </div>
 

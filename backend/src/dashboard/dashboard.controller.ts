@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Post, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AttemptEntity } from '../infrastructure/db/attempt.entity';
@@ -76,6 +76,14 @@ export class DashboardController {
         wrongCount: Number(w.wrongCount),
       })),
     };
+  }
+
+  @Post('reset')
+  async reset(@Query('userId') userId: string) {
+    this.validateUserId(userId);
+
+    const res = await this.attemptsRepo.delete({ userId });
+    return { ok: true, deleted: res.affected ?? 0 } as const;
   }
 
   @Get('domains')

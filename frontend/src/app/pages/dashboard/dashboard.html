@@ -16,6 +16,10 @@
     </div>
   </div>
 
+  <div *ngIf="!loading && !error" style="margin: 10px 0 18px">
+    <button class="ghost" (click)="resetKpis()">Remettre à zéro les KPI</button>
+  </div>
+
   <!-- Quick Actions -->
   <div class="actions" *ngIf="!loading && !error">
     <a

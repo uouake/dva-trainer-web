@@ -45,7 +45,7 @@
     <div class="qcard card">
       <div class="badge-row">
         <span class="badge muted font-mono">{{ index + 1 }}/{{ questions.length }}</span>
-        <span class="pill">Topic {{ q.topic }}</span>
+        <span class="pill">{{ (q.domainKey ?? 'unknown') === 'development' ? 'Développement' : (q.domainKey ?? 'unknown') === 'security' ? 'Security' : (q.domainKey ?? 'unknown') === 'deployment' ? 'Deployment' : (q.domainKey ?? 'unknown') === 'troubleshooting' ? 'Troubleshooting & Optimization' : 'Unknown' }}</span>
       </div>
 
       <pre class="stem">{{ q.stem }}</pre>

@@ -66,6 +66,8 @@ export type DashboardDomains = {
   }>;
 };
 
+export type DashboardReset = { ok: true; deleted: number };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -113,5 +115,10 @@ export class DvaApi {
   dashboardDomains(userId: string) {
     const params = new HttpParams().set('userId', userId);
     return this.http.get<DashboardDomains>(`${this.base}/api/dashboard/domains`, { params });
+  }
+
+  dashboardReset(userId: string) {
+    const params = new HttpParams().set('userId', userId);
+    return this.http.post<DashboardReset>(`${this.base}/api/dashboard/reset`, {}, { params });
   }
 }
