@@ -25,13 +25,14 @@ export class DailySessionController {
   async start(@Body() body: StartDailySessionDto) {
     const limit = Math.max(1, Math.min(body.limit ?? 10, 25));
 
-    // MVP: just take the first N active questions ordered by topic/questionNumber.
+    // V1 local: randomize questions so the routine isn't always the same slice.
     // Later: pick due questions + weaknesses + exploration.
-    const items = await this.questionsRepo.find({
-      where: { isActive: true },
-      order: { topic: 'ASC', questionNumber: 'ASC' },
-      take: limit,
-    });
+    const items = await this.questionsRepo
+      .createQueryBuilder('q')
+      .where('q.isActive = true')
+      .orderBy('RANDOM()')
+      .limit(limit)
+      .getMany();
 
     return {
       mode: 'daily',

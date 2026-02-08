@@ -108,9 +108,10 @@ export class Exam implements OnDestroy {
     // V1 rule: lock first answer per question (prevents inflating attempts stats).
     if (this.answers.has(q.id) || this.submittingAttempt) return;
 
+    // Optimistic local tracking (results work even if API is down).
     this.answers.set(q.id, choice);
-    this.submittingAttempt = true;
 
+    this.submittingAttempt = true;
     this.api
       .createAttempt({
         userId: this.userId,

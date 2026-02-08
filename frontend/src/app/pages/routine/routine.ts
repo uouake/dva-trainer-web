@@ -93,8 +93,12 @@ export class Routine {
 
     this.selectedChoice = choice;
     this.showFeedback = true;
-    this.submittingAttempt = true;
 
+    // Optimistic local tracking (so results still work even if API is down).
+    this.answers.set(q.id, choice);
+    if (choice === q.answer) this.correct.add(q.id);
+
+    this.submittingAttempt = true;
     this.api
       .createAttempt({
         userId: this.userId,
@@ -104,8 +108,9 @@ export class Routine {
       })
       .subscribe({
         next: (res) => {
-          this.answers.set(q.id, choice);
+          // Source of truth for correctness is backend.
           if (res.isCorrect) this.correct.add(q.id);
+          else this.correct.delete(q.id);
           this.submittingAttempt = false;
         },
         error: (err) => {

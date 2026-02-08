@@ -28,13 +28,14 @@ export class ExamController {
   async start(@Body() body: StartExamDto) {
     const count = Math.max(1, Math.min(body.count ?? 65, 65));
 
-    // MVP: pick the first 65 active questions.
-    // Later: randomize + domain distribution + avoid repeats.
-    const items = await this.questionsRepo.find({
-      where: { isActive: true },
-      order: { topic: 'ASC', questionNumber: 'ASC' },
-      take: count,
-    });
+    // V1 local: randomize question order.
+    // Later: domain distribution + avoid repeats across exams.
+    const items = await this.questionsRepo
+      .createQueryBuilder('q')
+      .where('q.isActive = true')
+      .orderBy('RANDOM()')
+      .limit(count)
+      .getMany();
 
     return {
       mode: 'exam',
