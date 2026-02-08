@@ -68,6 +68,7 @@ export class Dashboard {
 
   userId = '';
   weakConcepts: Array<{ conceptKey: string; wrongCount: number }> = [];
+  domainItems: Array<{ label: string; attempts: number; successRate: number | null }> = [];
 
   constructor(
     private readonly api: DvaApi,
@@ -95,6 +96,34 @@ export class Dashboard {
         ];
 
         this.weakConcepts = res.weakConcepts;
+
+        // Load per-domain breakdown (best-effort).
+        this.api.dashboardDomains(this.userId).subscribe({
+          next: (domains) => {
+            const labelFor = (k: string) =>
+              (
+                {
+                  development: 'Développement',
+                  security: 'Security',
+                  deployment: 'Deployment',
+                  troubleshooting: 'Troubleshooting & Optimization',
+                  unknown: 'Unknown',
+                } as Record<string, string>
+              )[k] ?? k;
+
+            this.domainItems = domains.items
+              .map((d) => ({
+                label: labelFor(d.domainKey),
+                attempts: d.attempts,
+                successRate: d.successRate,
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label));
+          },
+          error: () => {
+            // ignore
+          },
+        });
+
         this.loading = false;
       },
       error: (err) => {

@@ -34,6 +34,29 @@
     </a>
   </div>
 
+  <!-- Domain progress -->
+  <div class="card domain" *ngIf="!loading && !error">
+    <h2>Progression par domaine</h2>
+
+    <div *ngIf="!domainItems.length" class="muted">
+      Pas assez de données (ou domaine non renseigné). Fais une routine/exam pour alimenter les stats.
+    </div>
+
+    <div class="domain-row" *ngFor="let d of domainItems">
+      <div class="domain-head">
+        <div class="domain-name">{{ d.label }}</div>
+        <div class="domain-count muted font-mono">
+          {{ d.attempts }} tentatives — {{ d.successRate === null ? '—' : (d.successRate + '%') }}
+        </div>
+      </div>
+      <div class="bar">
+        <div class="bar-fill" [style.width.%]="d.successRate ?? 0"></div>
+      </div>
+    </div>
+
+    <p class="muted domain-hint" style="margin-top:12px">(Le domaine vient du champ <code>domainKey</code> de la banque de questions.)</p>
+  </div>
+
   <!-- Weak concepts -->
   <div class="card domain" *ngIf="!loading && !error">
     <h2>Notions à renforcer</h2>
