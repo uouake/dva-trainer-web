@@ -21,6 +21,7 @@ type QuestionJson = {
   choices: Record<string, string>;
   answer: string;
   conceptKey: string;
+  domainKey?: string;
   frExplanation: string;
   sourceUrl: string;
   textHash: string;
@@ -28,7 +29,32 @@ type QuestionJson = {
 };
 
 async function main() {
-  const filePath = resolve(__dirname, '../../../../../..', 'examtopics-downloader', 'dva-c02.questions.fr.json');
+  // Where to read the question bank from.
+  // We support multiple locations because the repo may live outside the OpenClaw workspace.
+  const candidates = [
+    process.env.QUESTIONS_JSON_PATH,
+    // sibling of repo root: /Users/uouake/workspace/examtopics-downloader/...
+    resolve(process.cwd(), '..', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
+    // legacy OpenClaw workspace location
+    resolve(process.cwd(), '..', '.openclaw', 'workspace', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
+    // relative to this file (original layout)
+    resolve(__dirname, '../../../../../..', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
+  ].filter(Boolean) as string[];
+
+  const filePath = candidates.find((p) => {
+    try {
+      return !!p && require('node:fs').existsSync(p);
+    } catch {
+      return false;
+    }
+  });
+
+  if (!filePath) {
+    throw new Error(
+      `Question bank JSON not found. Set QUESTIONS_JSON_PATH or place file at: ${candidates.join(', ')}`,
+    );
+  }
+
   const raw = readFileSync(filePath, 'utf-8');
   const parsed = JSON.parse(raw);
 
@@ -66,6 +92,7 @@ async function main() {
       e.choices = q.choices;
       e.answer = q.answer;
       e.conceptKey = q.conceptKey;
+      e.domainKey = q.domainKey ?? 'unknown';
       e.frExplanation = q.frExplanation;
       e.sourceUrl = q.sourceUrl;
       e.textHash = q.textHash;

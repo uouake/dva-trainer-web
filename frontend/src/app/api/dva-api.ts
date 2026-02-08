@@ -18,6 +18,7 @@ export type Question = {
   choices: Record<string, string>;
   answer: string;
   conceptKey: string;
+  domainKey?: string;
   frExplanation: string;
   sourceUrl: string;
   textHash: string;

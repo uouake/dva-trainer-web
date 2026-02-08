@@ -22,7 +22,8 @@
     "db:migration:run": "typeorm-ts-node-commonjs -d src/infrastructure/db/data-source.ts migration:run",
     "db:migration:revert": "typeorm-ts-node-commonjs -d src/infrastructure/db/data-source.ts migration:revert",
     "db:schema": "ts-node src/infrastructure/db/scripts/create-schema.ts",
-    "db:seed": "ts-node src/infrastructure/db/seed/seed-questions.ts"
+    "db:seed": "ts-node src/infrastructure/db/seed/seed-questions.ts",
+    "questions:enrich": "ts-node src/scripts/enrich-question-bank.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

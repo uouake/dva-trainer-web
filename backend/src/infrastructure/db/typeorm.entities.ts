@@ -44,6 +44,12 @@ export class QuestionEntity {
   @Column({ type: 'text' })
   conceptKey!: string;
 
+  // Domain key for DVA-C02 blueprint (e.g. "development", "security", ...)
+  // Added for V1 domain breakdown.
+  @Index()
+  @Column({ type: 'text', default: 'unknown' })
+  domainKey!: string;
+
   @Column({ type: 'text' })
   frExplanation!: string;
 
