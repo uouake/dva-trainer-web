@@ -21,7 +21,7 @@ From repo root:
 docker compose up -d
 ```
 
-DB will be available on `localhost:5432`.
+DB will be available on `localhost:5433`.
 
 Credentials (dev):
 - user: `dva`
@@ -32,7 +32,17 @@ Credentials (dev):
 
 ```bash
 cd backend
+cp .env.example .env
 npm install
+
+# 1) Create/update DB schema (dev-only)
+npm run db:schema
+
+# 2) Seed questions (expects a JSON question bank)
+# If needed, set QUESTIONS_JSON_PATH=/absolute/path/to/dva-c02.questions.fr.enriched.json
+npm run db:seed
+
+# Start API
 npm run start:dev
 ```
 
@@ -56,7 +66,12 @@ Frontend will run on `http://localhost:4200`.
 
 ## Notes
 
-This is an MVP scaffold. Next steps:
-- add Postgres ORM (likely Prisma) behind repositories (adapters)
-- import question bank (`dva-c02.questions.fr.json`)
-- implement Dashboard + Daily routine + Exam mode
+This repo is now a working local V1:
+- Daily routine + exam runner
+- Attempts persistence
+- Dashboard KPIs + weak concepts
+- Domain breakdown (requires enriched question bank with `domainKey`)
+
+Notes:
+- The question bank can be enriched (domainKey + beginner-friendly FR explanations) via:
+  `cd backend && npm run questions:enrich`
