@@ -34,20 +34,18 @@
     </a>
   </div>
 
-  <!-- Domain progress -->
+  <!-- Weak concepts -->
   <div class="card domain" *ngIf="!loading && !error">
-    <h2>Progression par domaine</h2>
+    <h2>Notions à renforcer</h2>
 
-    <div class="domain-row" *ngFor="let d of domains">
-      <div class="domain-head">
-        <div class="domain-name">{{ d.name }}</div>
-        <div class="domain-count muted font-mono">{{ d.questions }} questions</div>
-      </div>
-      <div class="bar">
-        <div class="bar-fill" [style.width.%]="d.progress"></div>
-      </div>
-    </div>
+    <div *ngIf="!weakConcepts.length" class="muted">Aucune erreur enregistrée pour le moment.</div>
 
-    <p class="muted domain-hint">Commencez à pratiquer pour voir votre progression ici</p>
+    <ul *ngIf="weakConcepts.length" class="muted" style="margin:0; padding-left:18px">
+      <li *ngFor="let w of weakConcepts">
+        <span class="font-mono">{{ w.conceptKey }}</span> — {{ w.wrongCount }} erreur(s)
+      </li>
+    </ul>
+
+    <p class="muted domain-hint" style="margin-top:12px">(Le breakdown par domaine arrive dans une itération suivante.)</p>
   </div>
 </div>

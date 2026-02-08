@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, NotFoundException, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AttemptEntity, AttemptMode } from '../infrastructure/db/attempt.entity';
@@ -27,14 +27,21 @@ export class AttemptsController {
 
   @Post()
   async create(@Body() dto: CreateAttemptDto) {
-    // Minimal validation.
+    // Minimal validation (no auth yet).
     if (!dto.userId || !dto.questionId || !dto.mode || !dto.selectedChoice) {
-      return { ok: false, error: 'Missing fields' };
+      throw new BadRequestException('Missing fields');
+    }
+
+    const uuidOk = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      dto.userId,
+    );
+    if (!uuidOk) {
+      throw new BadRequestException('Invalid userId (expected UUID)');
     }
 
     const q = await this.questionsRepo.findOne({ where: { id: dto.questionId } });
     if (!q) {
-      return { ok: false, error: 'Unknown questionId' };
+      throw new NotFoundException('Unknown questionId');
     }
 
     const attempt = new AttemptEntity();
@@ -51,6 +58,6 @@ export class AttemptsController {
       attemptId: saved.id,
       isCorrect: saved.isCorrect,
       correctAnswer: q.answer,
-    };
+    } as const;
   }
 }

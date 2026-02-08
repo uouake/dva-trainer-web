@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi, Question } from '../../api/dva-api';
+import { UserIdService } from '../../core/user-id.service';
 
 // Exam page redesigned to match aws-exam-buddy.
 //
@@ -41,7 +42,15 @@ export class Exam implements OnDestroy {
 
   private timer: number | null = null;
 
-  constructor(private readonly api: DvaApi) {}
+  userId = '';
+  submittingAttempt = false;
+
+  constructor(
+    private readonly api: DvaApi,
+    private readonly userIdService: UserIdService,
+  ) {
+    this.userId = this.userIdService.getOrCreate();
+  }
 
   ngOnDestroy() {
     this.stopTimer();
@@ -95,7 +104,29 @@ export class Exam implements OnDestroy {
   pick(choice: string) {
     const q = this.current;
     if (!q) return;
+
+    // V1 rule: lock first answer per question (prevents inflating attempts stats).
+    if (this.answers.has(q.id) || this.submittingAttempt) return;
+
     this.answers.set(q.id, choice);
+    this.submittingAttempt = true;
+
+    this.api
+      .createAttempt({
+        userId: this.userId,
+        questionId: q.id,
+        mode: 'exam',
+        selectedChoice: choice,
+      })
+      .subscribe({
+        next: () => {
+          this.submittingAttempt = false;
+        },
+        error: (err) => {
+          this.error = err?.message ?? String(err);
+          this.submittingAttempt = false;
+        },
+      });
   }
 
   chosenFor(q: Question): string | null {

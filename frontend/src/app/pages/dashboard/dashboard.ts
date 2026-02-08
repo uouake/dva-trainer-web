@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi } from '../../api/dva-api';
+import { UserIdService } from '../../core/user-id.service';
 
 // Dashboard page redesigned to match aws-exam-buddy (layout + cards + quick actions).
 //
@@ -65,11 +66,35 @@ export class Dashboard {
     { name: 'Monitoring', progress: 0, questions: 0 },
   ];
 
-  constructor(private readonly api: DvaApi) {
-    // We only ping the API for health right now.
-    // Later, stats will come from /api/dashboard/overview.
-    this.api.health().subscribe({
-      next: () => {
+  userId = '';
+  weakConcepts: Array<{ conceptKey: string; wrongCount: number }> = [];
+
+  constructor(
+    private readonly api: DvaApi,
+    private readonly userIdService: UserIdService,
+  ) {
+    this.userId = this.userIdService.getOrCreate();
+
+    // Load real stats.
+    this.api.dashboardOverview(this.userId).subscribe({
+      next: (res) => {
+        this.stats = [
+          {
+            label: 'Questions pratiquées',
+            value: String(res.questionsPracticed),
+            tone: 'primary',
+          },
+          {
+            label: 'Taux de réussite',
+            value: res.successRate === null ? '—' : `${res.successRate}%`,
+            tone: 'success',
+          },
+          // Not tracked yet (V1 later)
+          { label: "Temps d'étude", value: '—', tone: 'warning' },
+          { label: 'Série en cours', value: '—', tone: 'primary' },
+        ];
+
+        this.weakConcepts = res.weakConcepts;
         this.loading = false;
       },
       error: (err) => {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi, Question } from '../../api/dva-api';
+import { UserIdService } from '../../core/user-id.service';
 
 // Daily routine redesigned to match aws-exam-buddy.
 //
@@ -29,8 +30,19 @@ export class Routine {
   // current answer
   selectedChoice: string | null = null;
   showFeedback = false;
+  submittingAttempt = false;
 
-  constructor(private readonly api: DvaApi) {}
+  // session state
+  userId = '';
+  answers = new Map<string, string>(); // questionId -> choice
+  correct = new Set<string>(); // questionId
+
+  constructor(
+    private readonly api: DvaApi,
+    private readonly userIdService: UserIdService,
+  ) {
+    this.userId = this.userIdService.getOrCreate();
+  }
 
   startSession(count: number) {
     this.loading = true;
@@ -39,6 +51,9 @@ export class Routine {
     this.index = 0;
     this.selectedChoice = null;
     this.showFeedback = false;
+    this.submittingAttempt = false;
+    this.answers.clear();
+    this.correct.clear();
 
     this.api.startDailySession(count).subscribe({
       next: (res) => {
@@ -66,16 +81,38 @@ export class Routine {
   }
 
   answeredCount(): number {
-    // For MVP, we count as answered if selectedChoice exists for current index,
-    // but since we don't persist per-question answers in routine yet,
-    // show 0 until we implement attempts persistence.
-    return 0;
+    return this.answers.size;
   }
 
   pick(choice: string) {
-    if (!this.current) return;
+    const q = this.current;
+    if (!q) return;
+
+    // V1 rule: first answer wins (prevents double counting attempts).
+    if (this.answers.has(q.id) || this.submittingAttempt) return;
+
     this.selectedChoice = choice;
     this.showFeedback = true;
+    this.submittingAttempt = true;
+
+    this.api
+      .createAttempt({
+        userId: this.userId,
+        questionId: q.id,
+        mode: 'daily',
+        selectedChoice: choice,
+      })
+      .subscribe({
+        next: (res) => {
+          this.answers.set(q.id, choice);
+          if (res.isCorrect) this.correct.add(q.id);
+          this.submittingAttempt = false;
+        },
+        error: (err) => {
+          this.error = err?.message ?? String(err);
+          this.submittingAttempt = false;
+        },
+      });
   }
 
   next() {

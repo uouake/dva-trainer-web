@@ -71,6 +71,7 @@
               class="choice"
               *ngFor="let k of choiceKeys(q)"
               (click)="pick(k)"
+              [disabled]="submittingAttempt || answers.has(q.id)"
               [class.selected]="chosenFor(q) === k"
             >
               <div class="choice-k">{{ k }}</div>

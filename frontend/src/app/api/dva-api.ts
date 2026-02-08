@@ -30,6 +30,31 @@ export type Paged<T> = {
   items: T[];
 };
 
+export type AttemptMode = 'daily' | 'exam';
+
+export type CreateAttemptDto = {
+  userId: string;
+  questionId: string;
+  mode: AttemptMode;
+  selectedChoice: string;
+};
+
+export type CreateAttemptResult = {
+  ok: true;
+  attemptId: string;
+  isCorrect: boolean;
+  correctAnswer: string;
+};
+
+export type DashboardOverview = {
+  ok: true;
+  totalAttempts: number;
+  correctAttempts: number;
+  successRate: number | null;
+  questionsPracticed: number;
+  weakConcepts: Array<{ conceptKey: string; wrongCount: number }>;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -63,5 +88,14 @@ export class DvaApi {
       durationMinutes: number;
       items: Question[];
     }>(`${this.base}/api/exams/start`, {});
+  }
+
+  createAttempt(dto: CreateAttemptDto) {
+    return this.http.post<CreateAttemptResult>(`${this.base}/api/attempts`, dto);
+  }
+
+  dashboardOverview(userId: string) {
+    const params = new HttpParams().set('userId', userId);
+    return this.http.get<DashboardOverview>(`${this.base}/api/dashboard/overview`, { params });
   }
 }

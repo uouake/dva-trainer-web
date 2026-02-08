@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AttemptEntity } from '../infrastructure/db/attempt.entity';
@@ -24,7 +24,15 @@ export class DashboardController {
   @Get('overview')
   async overview(@Query('userId') userId: string) {
     if (!userId) {
-      return { ok: false, error: 'Missing userId' };
+      throw new BadRequestException('Missing userId');
+    }
+
+    // Minimal UUID format validation (no auth yet).
+    const uuidOk = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      userId,
+    );
+    if (!uuidOk) {
+      throw new BadRequestException('Invalid userId (expected UUID)');
     }
 
     const totalAttempts = await this.attemptsRepo.count({ where: { userId } });

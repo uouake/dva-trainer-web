@@ -55,6 +55,7 @@
           class="choice"
           *ngFor="let k of choiceKeys(q)"
           (click)="pick(k)"
+          [disabled]="submittingAttempt || answers.has(q.id)"
           [class.selected]="selectedChoice === k"
           [class.correct]="showFeedback && k === q.answer"
           [class.wrong]="showFeedback && selectedChoice === k && k !== q.answer"
@@ -84,7 +85,16 @@
   <!-- Results -->
   <div *ngIf="phase === 'results'" class="results">
     <h1>Résultats</h1>
-    <p class="muted">MVP: les résultats détaillés arrivent avec les attempts persistés.</p>
+
+    <p class="muted">
+      Score : <strong>{{ correct.size }}</strong>/<strong>{{ questions.length }}</strong>
+      ({{ (questions.length ? (correct.size / questions.length * 100) : 0) | number: '1.0-0' }}%)
+    </p>
+
+    <p class="muted" *ngIf="correct.size !== questions.length">
+      Astuce : consulte ton Dashboard pour voir les notions à renforcer.
+    </p>
+
     <button class="btn-primary" (click)="backToIntro()">Recommencer</button>
   </div>
 </div>
