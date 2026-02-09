@@ -5,6 +5,10 @@
 // - Makes it easy to migrate between environments (dev, CI, prod).
 // - Helps us avoid sprinkling `process.env.X` all over the codebase.
 
+export function env(name: string): string | undefined {
+  return process.env[name];
+}
+
 export function requireEnv(name: string, fallback?: string): string {
   const v = process.env[name] ?? fallback;
   if (!v) {
