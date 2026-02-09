@@ -40,6 +40,10 @@ export class QuestionEntity {
   @Column({ type: 'text' })
   answer!: string;
 
+  // Number of answers required (1 for single choice, 2+ for multiple choice)
+  @Column({ type: 'int', default: 1 })
+  requiredAnswers!: number;
+
   @Index()
   @Column({ type: 'text' })
   conceptKey!: string;

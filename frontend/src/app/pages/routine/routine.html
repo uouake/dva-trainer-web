@@ -48,6 +48,8 @@
         <span class="pill">{{ (q.domainKey ?? 'unknown') === 'development' ? 'Développement' : (q.domainKey ?? 'unknown') === 'security' ? 'Security' : (q.domainKey ?? 'unknown') === 'deployment' ? 'Deployment' : (q.domainKey ?? 'unknown') === 'troubleshooting' ? 'Troubleshooting & Optimization' : 'Unknown' }}</span>
       </div>
 
+      <app-multi-answer-badge [requiredAnswers]="q.requiredAnswers || 1"></app-multi-answer-badge>
+
       <pre class="stem">{{ q.stem }}</pre>
 
       <!-- Explication pédagogique visible pendant la routine -->

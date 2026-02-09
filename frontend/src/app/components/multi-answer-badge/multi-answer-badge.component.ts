@@ -16,33 +16,47 @@ import { CommonModule } from '@angular/common';
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: hsl(var(--warning) / 0.12);
+      background: linear-gradient(135deg, hsl(var(--warning) / 0.15), hsl(var(--warning) / 0.08));
       color: hsl(var(--warning-foreground));
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      border: 1px solid hsl(var(--warning) / 0.3);
+      border: 2px solid hsl(var(--warning) / 0.4);
       margin-bottom: 12px;
-      animation: pulse 2s infinite;
+      animation: pulse-badge 2s infinite;
+      box-shadow: 0 2px 8px hsl(var(--warning) / 0.2);
     }
     
-    @keyframes pulse {
+    @keyframes pulse-badge {
       0%, 100% {
-        box-shadow: 0 0 0 0 hsl(var(--warning) / 0.4);
+        box-shadow: 0 2px 8px hsl(var(--warning) / 0.2), 0 0 0 0 hsl(var(--warning) / 0.4);
       }
       50% {
-        box-shadow: 0 0 0 4px hsl(var(--warning) / 0);
+        box-shadow: 0 2px 8px hsl(var(--warning) / 0.2), 0 0 0 6px hsl(var(--warning) / 0);
       }
     }
     
     .badge-icon {
-      font-size: 14px;
+      font-size: 16px;
+      animation: bounce 1s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
     }
     
     .badge-text {
       text-transform: uppercase;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
+    }
+    
+    @media (max-width: 600px) {
+      .multi-answer-badge {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
     }
   `]
 })

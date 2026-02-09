@@ -17,6 +17,7 @@ export type Question = {
   stem: string;
   choices: Record<string, string>;
   answer: string;
+  requiredAnswers: number; // 1 for single choice, 2+ for multiple choice
   conceptKey: string;
   domainKey?: string;
   frExplanation: string;
