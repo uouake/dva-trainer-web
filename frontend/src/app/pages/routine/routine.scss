@@ -243,3 +243,17 @@ h1 {
     font-size: 13px;
   }
 }
+
+// Styles pour les termes du glossaire
+::ng-deep .glossary-term-inline {
+  color: hsl(var(--info));
+  border-bottom: 1px dashed hsl(var(--info) / 0.5);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: hsl(var(--info) / 0.1);
+    border-bottom-style: solid;
+  }
+}
