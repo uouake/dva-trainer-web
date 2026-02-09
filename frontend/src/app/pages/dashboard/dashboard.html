@@ -17,7 +17,19 @@
   </div>
 
   <div *ngIf="!loading && !error" class="reset-row">
-    <button class="btn-ghost" (click)="resetKpis()" aria-label="Remettre à zéro toutes les statistiques de progression">Remettre à zéro les KPI</button>
+    <button class="btn-ghost" (click)="openResetModal()" aria-label="Remettre à zéro toutes les statistiques de progression">Remettre à zéro les KPI</button>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div *ngIf="showResetModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reset-title" aria-describedby="reset-desc">
+    <div class="modal-card card">
+      <h3 id="reset-title">Confirmer la réinitialisation ?</h3>
+      <p class="muted" id="reset-desc">Vous êtes sur le point de remettre à zéro toutes vos statistiques de progression. Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="closeResetModal()" aria-label="Annuler la réinitialisation">Annuler</button>
+        <button class="btn-primary" (click)="confirmResetKpis()" aria-label="Confirmer la réinitialisation des statistiques">Confirmer</button>
+      </div>
+    </div>
   </div>
 
   <!-- Quick Actions -->

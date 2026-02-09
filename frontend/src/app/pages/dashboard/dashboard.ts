@@ -69,6 +69,7 @@ export class Dashboard {
   userId = '';
   weakConcepts: Array<{ conceptKey: string; wrongCount: number }> = [];
   domainItems: Array<{ label: string; attempts: number; successRate: number | null }> = [];
+  showResetModal = false;
 
   constructor(
     private readonly api: DvaApi,
@@ -139,9 +140,16 @@ export class Dashboard {
     });
   }
 
-  resetKpis() {
-    if (!confirm('Remettre à zéro vos statistiques (attempts) ?')) return;
+  openResetModal() {
+    this.showResetModal = true;
+  }
 
+  closeResetModal() {
+    this.showResetModal = false;
+  }
+
+  confirmResetKpis() {
+    this.showResetModal = false;
     this.api.dashboardReset(this.userId).subscribe({
       next: () => {
         this.weakConcepts = [];

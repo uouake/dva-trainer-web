@@ -111,6 +111,38 @@
   margin: 10px 0 0;
 }
 
+.modal {
+  position: fixed;
+  inset: 0;
+  background: hsl(var(--background) / 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: 14px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+}
+
+.modal-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
 .domain {
   padding: 18px;
   border-radius: 14px;
