@@ -1,0 +1,58 @@
+services:
+  # Backend NestJS
+  - type: web
+    name: dva-trainer-api
+    runtime: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run db:schema && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        fromDatabase:
+          name: dva-trainer-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: dva-trainer-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: dva-trainer-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: dva-trainer-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: dva-trainer-db
+          property: database
+    healthCheckPath: /api/health
+
+  # Frontend Angular (static site)
+  - type: web
+    name: dva-trainer-web
+    runtime: static
+    plan: free
+    buildCommand: cd frontend && npm install && API_BASE_URL=https://dva-trainer-api.onrender.com npm run build
+    staticPublishPath: ./frontend/dist/frontend/browser
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://dva-trainer-api.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+databases:
+  - name: dva-trainer-db
+    plan: free
+    databaseName: dva_trainer
+    user: dva
