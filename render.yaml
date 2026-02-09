@@ -3,7 +3,7 @@ services:
   - type: web
     name: dva-trainer-api
     runtime: node
-    plan: free
+    plan: starter
     buildCommand: cd backend && npm install && npm run build
     startCommand: cd backend && npm run db:schema && npm run start:prod
     envVars:
@@ -37,7 +37,7 @@ services:
   - type: web
     name: dva-trainer-web
     runtime: static
-    plan: free
+    plan: starter
     buildCommand: cd frontend && npm install && API_BASE_URL=https://dva-trainer-api.onrender.com npm run build
     staticPublishPath: ./frontend/dist/frontend/browser
     routes:
