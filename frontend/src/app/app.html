@@ -1,21 +1,32 @@
-<div class="app-shell" [class.fullscreen-exam]="isFullscreenExam">
+<div class="app-shell" [class.fullscreen-exam]="isFullscreenExam" [class.sidebar-open]="sidebarOpen">
+  <button class="sidebar-toggle" (click)="toggleSidebar()" aria-label="Ouvrir le menu">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
+
   <aside class="sidebar">
-    <a class="brand" routerLink="/dashboard">
-      <div class="brand-icon">☁️</div>
-      <div>
-        <div class="brand-title">AWS DVA-C02</div>
-        <div class="brand-sub font-mono">Study Hub</div>
-      </div>
-    </a>
+    <div class="sidebar-header">
+      <a class="brand" routerLink="/dashboard" (click)="closeSidebar()">
+        <div class="brand-icon">☁️</div>
+        <div>
+          <div class="brand-title">AWS DVA-C02</div>
+          <div class="brand-sub font-mono">Study Hub</div>
+        </div>
+      </a>
+      <button class="sidebar-close" (click)="closeSidebar()" aria-label="Fermer le menu">✕</button>
+    </div>
 
     <nav class="nav">
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/routine" routerLinkActive="active">Routine Quotidienne</a>
-      <a routerLink="/exam" routerLinkActive="active">Simulateur d'Examen</a>
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">Dashboard</a>
+      <a routerLink="/routine" routerLinkActive="active" (click)="closeSidebar()">Routine Quotidienne</a>
+      <a routerLink="/exam" routerLinkActive="active" (click)="closeSidebar()">Simulateur d'Examen</a>
     </nav>
 
     <div class="sidebar-footer font-mono">DVA-C02 · v1.0</div>
   </aside>
+
+  <div class="sidebar-overlay" (click)="closeSidebar()"></div>
 
   <main class="content">
     <router-outlet />

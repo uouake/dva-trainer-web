@@ -22,6 +22,9 @@ export class App {
   // That means: no sidebar, no outer padding.
   isFullscreenExam = false;
 
+  // Mobile sidebar state
+  sidebarOpen = false;
+
   constructor(private readonly router: Router) {
     this.updateFullscreen(router.url);
     router.events.subscribe((e) => {
@@ -35,5 +38,13 @@ export class App {
     // Fullscreen for the whole /exam route.
     // If later we want only in-progress exam to be fullscreen, we can refine this.
     this.isFullscreenExam = url.startsWith('/exam');
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar() {
+    this.sidebarOpen = false;
   }
 }

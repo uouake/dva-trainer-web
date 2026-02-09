@@ -3,6 +3,39 @@
   display: flex;
 }
 
+/* Mobile sidebar toggle button */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.sidebar-toggle:hover {
+  background: hsl(var(--muted));
+}
+
+.burger-line {
+  width: 20px;
+  height: 2px;
+  background: hsl(var(--foreground));
+  border-radius: 2px;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
 .sidebar {
   width: 256px;
   padding: 16px;
@@ -11,6 +44,43 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: transform 250ms ease;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-close {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: hsl(var(--muted-foreground));
+  font-size: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-close:hover {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+/* Overlay for mobile sidebar */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 250ms ease;
 }
 
 .brand {
@@ -99,16 +169,57 @@
   padding: 0;
 }
 
+/* Mobile sidebar styles */
 @media (max-width: 720px) {
-  .sidebar {
-    display: none;
+  .sidebar-toggle {
+    display: flex;
   }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+  }
+
+  .sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: flex;
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .sidebar-open .sidebar-overlay {
+    opacity: 1;
+  }
+
   .content {
     padding: 16px;
+    padding-top: 72px; /* Space for toggle button */
   }
 
   /* In fullscreen exam we still want zero padding */
   .fullscreen-exam .content {
     padding: 0;
+  }
+
+  .fullscreen-exam .sidebar-toggle {
+    display: none;
+  }
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) and (min-width: 721px) {
+  .sidebar {
+    width: 240px;
   }
 }

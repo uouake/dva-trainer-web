@@ -20,6 +20,10 @@ services:
     rootDir: frontend
     buildCommand: npm ci --include=dev && npm run build
     staticPublishPath: ./dist/frontend/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
 
 databases:
   - name: dva-trainer-db
