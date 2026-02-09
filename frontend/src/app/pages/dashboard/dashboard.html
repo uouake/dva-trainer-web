@@ -9,15 +9,15 @@
   <div *ngIf="error" class="error">Erreur: {{ error }}</div>
 
   <!-- Stats -->
-  <div class="stats" *ngIf="!loading && !error">
-    <div class="stat card" *ngFor="let s of stats">
-      <div class="stat-value font-mono">{{ s.value }}</div>
-      <div class="stat-label muted">{{ s.label }}</div>
+  <div class="stats" *ngIf="!loading && !error" role="list" aria-label="Statistiques de progression">
+    <div class="stat card" *ngFor="let s of stats" role="listitem" [attr.aria-label]="s.label + ': ' + s.value">
+      <div class="stat-value font-mono" aria-hidden="true">{{ s.value }}</div>
+      <div class="stat-label muted" aria-hidden="true">{{ s.label }}</div>
     </div>
   </div>
 
   <div *ngIf="!loading && !error" class="reset-row">
-    <button class="btn-ghost" (click)="resetKpis()">Remettre à zéro les KPI</button>
+    <button class="btn-ghost" (click)="resetKpis()" aria-label="Remettre à zéro toutes les statistiques de progression">Remettre à zéro les KPI</button>
   </div>
 
   <!-- Quick Actions -->
@@ -48,12 +48,12 @@
 
     <div class="domain-row" *ngFor="let d of domainItems">
       <div class="domain-head">
-        <div class="domain-name">{{ d.label }}</div>
-        <div class="domain-count muted font-mono">
+        <div class="domain-name" [id]="'domain-' + d.label">{{ d.label }}</div>
+        <div class="domain-count muted font-mono" [attr.aria-label]="d.attempts + ' tentatives, taux de réussite: ' + (d.successRate === null ? 'non disponible' : d.successRate + '%')">
           {{ d.attempts }} tentatives — {{ d.successRate === null ? '—' : (d.successRate + '%') }}
         </div>
       </div>
-      <div class="bar">
+      <div class="bar" role="progressbar" [attr.aria-valuenow]="d.successRate ?? 0" aria-valuemin="0" aria-valuemax="100" [attr.aria-labelledby]="'domain-' + d.label">
         <div class="bar-fill" [style.width.%]="d.successRate ?? 0"></div>
       </div>
     </div>

@@ -9,35 +9,35 @@
     <div *ngIf="loading">Chargement…</div>
     <div *ngIf="error" class="error">Erreur: {{ error }}</div>
 
-    <div class="pick-grid" *ngIf="!loading">
-      <button class="pick card" (click)="startSession(5)">
-        <div class="pick-value font-mono">5</div>
-        <div class="pick-label muted">questions</div>
-        <div class="pick-play muted">▶</div>
+    <div class="pick-grid" *ngIf="!loading" role="group" aria-label="Choisissez le nombre de questions">
+      <button class="pick card" (click)="startSession(5)" aria-label="Démarrer une session de 5 questions">
+        <div class="pick-value font-mono" aria-hidden="true">5</div>
+        <div class="pick-label muted" aria-hidden="true">questions</div>
+        <div class="pick-play muted" aria-hidden="true">▶</div>
       </button>
 
-      <button class="pick card" (click)="startSession(10)">
-        <div class="pick-value font-mono">10</div>
-        <div class="pick-label muted">questions</div>
-        <div class="pick-play muted">▶</div>
+      <button class="pick card" (click)="startSession(10)" aria-label="Démarrer une session de 10 questions">
+        <div class="pick-value font-mono" aria-hidden="true">10</div>
+        <div class="pick-label muted" aria-hidden="true">questions</div>
+        <div class="pick-play muted" aria-hidden="true">▶</div>
       </button>
 
-      <button class="pick card" (click)="startSession(15)">
-        <div class="pick-value font-mono">15</div>
-        <div class="pick-label muted">questions</div>
-        <div class="pick-play muted">▶</div>
+      <button class="pick card" (click)="startSession(15)" aria-label="Démarrer une session de 15 questions">
+        <div class="pick-value font-mono" aria-hidden="true">15</div>
+        <div class="pick-label muted" aria-hidden="true">questions</div>
+        <div class="pick-play muted" aria-hidden="true">▶</div>
       </button>
     </div>
   </div>
 
   <!-- Session -->
   <div *ngIf="phase === 'session' && current as q" class="session">
-    <div class="progress">
+    <div class="progress" role="progressbar" [attr.aria-valuenow]="index + 1" [attr.aria-valuemax]="questions.length" aria-label="Progression de la session">
       <div class="progress-head">
-        <span class="muted">Question {{ index + 1 }} sur {{ questions.length }}</span>
-        <span class="muted font-mono">{{ answeredCount() }}/{{ questions.length }} répondu</span>
+        <span class="muted" aria-hidden="true">Question {{ index + 1 }} sur {{ questions.length }}</span>
+        <span class="muted font-mono" aria-hidden="true">{{ answeredCount() }}/{{ questions.length }} répondu</span>
       </div>
-      <div class="progress-bar">
+      <div class="progress-bar" aria-hidden="true">
         <div class="progress-fill" [style.width.%]="progressPercent()"></div>
       </div>
     </div>
@@ -50,7 +50,7 @@
 
       <pre class="stem">{{ q.stem }}</pre>
 
-      <div class="choices">
+      <div class="choices" role="radiogroup" [attr.aria-label]="'Choix de réponse pour la question ' + (index + 1)">
         <button
           class="choice"
           *ngFor="let k of choiceKeys(q)"
@@ -59,9 +59,12 @@
           [class.selected]="selectedChoice === k"
           [class.correct]="showFeedback && k === q.answer"
           [class.wrong]="showFeedback && selectedChoice === k && k !== q.answer"
+          role="radio"
+          [attr.aria-checked]="selectedChoice === k"
+          [attr.aria-label]="'Option ' + k + ': ' + q.choices[k]"
         >
-          <div class="choice-k">{{ k }}</div>
-          <div class="choice-body">{{ q.choices[k] }}</div>
+          <div class="choice-k" aria-hidden="true">{{ k }}</div>
+          <div class="choice-body" aria-hidden="true">{{ q.choices[k] }}</div>
         </button>
       </div>
     </div>

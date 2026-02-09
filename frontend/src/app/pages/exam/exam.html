@@ -47,7 +47,7 @@
         <span class="muted"><span class="primary">{{ answeredCount() }}</span> répondu</span>
       </div>
 
-      <div class="timer font-mono">⏱ {{ formatTime(secondsLeft) }}</div>
+      <div class="timer font-mono" role="timer" aria-live="polite" aria-atomic="true" [attr.aria-label]="'Temps restant: ' + formatTime(secondsLeft)">⏱ {{ formatTime(secondsLeft) }}</div>
 
       <div class="right">
         <button class="icon" (click)="showGrid = !showGrid" [class.icon-active]="showGrid">▦</button>
@@ -61,7 +61,7 @@
           <div class="qhead">
             <span class="badge font-mono muted">{{ index + 1 }}/{{ questions.length }}</span>
             <span class="pill">{{ (q.domainKey ?? 'unknown') === 'development' ? 'Développement' : (q.domainKey ?? 'unknown') === 'security' ? 'Security' : (q.domainKey ?? 'unknown') === 'deployment' ? 'Deployment' : (q.domainKey ?? 'unknown') === 'troubleshooting' ? 'Troubleshooting & Optimization' : 'Unknown' }}</span>
-            <button class="flag" (click)="toggleFlag()">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
+            <button class="flag" (click)="toggleFlag()" [attr.aria-label]="isFlagged(q) ? 'Retirer le marqueur de la question ' + (index + 1) : 'Marquer la question ' + (index + 1) + ' pour revision'" [attr.aria-pressed]="isFlagged(q)">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
           </div>
 
           <pre class="stem">{{ q.stem }}</pre>
@@ -86,15 +86,18 @@
         </div>
       </div>
 
-      <aside *ngIf="showGrid" class="side card exam-card">
-        <div class="side-title">Navigation</div>
-        <div class="grid">
+      <aside *ngIf="showGrid" class="side card exam-card" aria-label="Navigation entre les questions">
+        <div class="side-title" id="nav-title">Navigation</div>
+        <div class="grid" role="grid" aria-labelledby="nav-title">
           <button
             *ngFor="let q of questions; let i = index"
             (click)="goTo(i)"
             [class.current]="i === index"
             [class.answered]="chosenFor(q) !== null"
             [class.flagged]="isFlagged(q)"
+            [attr.aria-label]="'Question ' + (i + 1) + (chosenFor(q) ? ' - répondu' : '') + (isFlagged(q) ? ' - marquée' : '') + (i === index ? ' - question actuelle' : '')"
+            [attr.aria-current]="i === index ? 'true' : null"
+            role="gridcell"
           >
             {{ i + 1 }}
           </button>
@@ -108,13 +111,13 @@
     </div>
 
     <!-- Submit confirm -->
-    <div *ngIf="showSubmitConfirm" class="modal">
+    <div *ngIf="showSubmitConfirm" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-desc">
       <div class="modal-card card exam-card">
-        <h3>Terminer l'examen ?</h3>
-        <p class="muted">{{ answeredCount() }}/{{ questions.length }} questions répondues</p>
+        <h3 id="confirm-title">Terminer l'examen ?</h3>
+        <p class="muted" id="confirm-desc">{{ answeredCount() }}/{{ questions.length }} questions répondues</p>
         <div class="modal-actions">
-          <button class="ghost" (click)="showSubmitConfirm = false">Continuer</button>
-          <button class="btn-primary" (click)="submit()">Terminer</button>
+          <button class="ghost" (click)="showSubmitConfirm = false" aria-label="Continuer l'examen">Continuer</button>
+          <button class="btn-primary" (click)="submit()" aria-label="Terminer et soumettre l'examen">Terminer</button>
         </div>
       </div>
     </div>
