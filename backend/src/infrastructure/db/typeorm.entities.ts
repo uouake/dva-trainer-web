@@ -53,6 +53,10 @@ export class QuestionEntity {
   @Column({ type: 'text' })
   frExplanation!: string;
 
+  // Explication pédagogique niveau adolescent avec analogies
+  @Column({ type: 'text', nullable: true })
+  frExplanationPedagogique?: string;
+
   @Column({ type: 'text' })
   sourceUrl!: string;
 

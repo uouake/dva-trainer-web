@@ -20,6 +20,7 @@ export type Question = {
   conceptKey: string;
   domainKey?: string;
   frExplanation: string;
+  frExplanationPedagogique?: string;
   sourceUrl: string;
   textHash: string;
 };

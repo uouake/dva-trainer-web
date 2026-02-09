@@ -23,6 +23,7 @@ type QuestionJson = {
   conceptKey: string;
   domainKey?: string;
   frExplanation: string;
+  frExplanationPedagogique?: string;
   sourceUrl: string;
   textHash: string;
   isActive?: boolean;
@@ -94,6 +95,7 @@ async function main() {
       e.conceptKey = q.conceptKey;
       e.domainKey = q.domainKey ?? 'unknown';
       e.frExplanation = q.frExplanation;
+      e.frExplanationPedagogique = q.frExplanationPedagogique;
       e.sourceUrl = q.sourceUrl;
       e.textHash = q.textHash;
       e.isActive = q.isActive ?? true;
