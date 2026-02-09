@@ -1,6 +1,6 @@
 // Glossary module exports
-export { GlossaryService, GlossaryTerm } from '../core/glossary.service';
+export { GlossaryService, GlossaryTerm } from '../../core/glossary.service';
 export { GlossaryTooltipComponent } from './glossary-tooltip.component';
 export { GlossaryTooltipPopupComponent } from './glossary-tooltip-popup.component';
 export { GlossaryHandlerDirective } from './glossary-handler.directive';
-export { GlossaryPipe } from '../pipes/glossary.pipe';
+export { GlossaryPipe } from '../../pipes/glossary.pipe';

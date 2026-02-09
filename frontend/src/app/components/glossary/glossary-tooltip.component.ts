@@ -1,6 +1,6 @@
 import { Component, Input, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GlossaryService, GlossaryTerm } from '../core/glossary.service';
+import { GlossaryService, GlossaryTerm } from '../../core/glossary.service';
 
 @Component({
   selector: 'app-glossary-tooltip',

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, ComponentRef, ViewContainerRef, ComponentFactoryResolver, OnDestroy } from '@angular/core';
-import { GlossaryService } from '../core/glossary.service';
+import { GlossaryService } from '../../core/glossary.service';
 import { GlossaryTooltipPopupComponent } from './glossary-tooltip-popup.component';
 
 @Directive({

@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi, Question } from '../../api/dva-api';
 import { UserIdService } from '../../core/user-id.service';
-import { GlossaryService } from '../../core/glossary.service';
-import { GlossaryHandlerDirective } from '../../components/glossary/glossary-handler.directive';
-import { GlossaryPipe } from '../../pipes/glossary.pipe';
 
 // Daily routine redesigned to match aws-exam-buddy.
 //
@@ -17,7 +14,7 @@ type Phase = 'intro' | 'session' | 'results';
 
 @Component({
   selector: 'app-routine',
-  imports: [CommonModule, RouterLink, GlossaryHandlerDirective, GlossaryPipe],
+  imports: [CommonModule, RouterLink],
   templateUrl: './routine.html',
   styleUrl: './routine.scss',
 })
