@@ -35,14 +35,14 @@ async function main() {
   // We support multiple locations because the repo may live outside the OpenClaw workspace.
   const candidates = [
     process.env.QUESTIONS_JSON_PATH,
-    // bundled data file for Render deployment
+    // Render deployment paths
     resolve(process.cwd(), 'data', 'questions.json'),
-    // sibling of repo root: /Users/uouake/workspace/examtopics-downloader/...
+    resolve('/opt/render/project/src/backend/data', 'questions.json'),
+    // sibling of repo root
     resolve(process.cwd(), '..', 'examtopics-downloader', 'dva-c02.questions.fr.tagged.json'),
     resolve(process.cwd(), '..', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
-    // legacy OpenClaw workspace location
+    // legacy paths
     resolve(process.cwd(), '..', '.openclaw', 'workspace', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
-    // relative to this file (original layout)
     resolve(__dirname, '../../../../../..', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
   ].filter(Boolean) as string[];
 
