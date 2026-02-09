@@ -13,7 +13,7 @@ class CreateAttemptDto {
   userId!: string;
   questionId!: string;
   mode!: AttemptMode;
-  selectedChoice!: string | string[];
+  selectedChoice!: string;
 }
 
 @Controller('api/attempts')

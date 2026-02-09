@@ -20,6 +20,7 @@ type QuestionJson = {
   stem: string;
   choices: Record<string, string>;
   answer: string;
+  requiredAnswers?: number;
   conceptKey: string;
   domainKey?: string;
   frExplanation: string;
@@ -34,7 +35,10 @@ async function main() {
   // We support multiple locations because the repo may live outside the OpenClaw workspace.
   const candidates = [
     process.env.QUESTIONS_JSON_PATH,
+    // bundled data file for Render deployment
+    resolve(process.cwd(), 'data', 'questions.json'),
     // sibling of repo root: /Users/uouake/workspace/examtopics-downloader/...
+    resolve(process.cwd(), '..', 'examtopics-downloader', 'dva-c02.questions.fr.tagged.json'),
     resolve(process.cwd(), '..', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
     // legacy OpenClaw workspace location
     resolve(process.cwd(), '..', '.openclaw', 'workspace', 'examtopics-downloader', 'dva-c02.questions.fr.json'),
@@ -92,6 +96,7 @@ async function main() {
       e.stem = q.stem;
       e.choices = q.choices;
       e.answer = q.answer;
+      e.requiredAnswers = q.requiredAnswers ?? 1;
       e.conceptKey = q.conceptKey;
       e.domainKey = q.domainKey ?? 'unknown';
       e.frExplanation = q.frExplanation;
