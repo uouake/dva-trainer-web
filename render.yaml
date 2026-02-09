@@ -1,5 +1,3 @@
-# Simplified Render Blueprint - version minimaliste pour diagnostic
-
 services:
   - type: web
     name: dva-trainer-api
@@ -16,7 +14,6 @@ services:
         fromDatabase:
           name: dva-trainer-db
           property: connectionString
-    healthCheckPath: /api/health
 
   - type: web
     name: dva-trainer-web
@@ -24,6 +21,9 @@ services:
     plan: starter
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: ./frontend/dist/frontend/browser
+    envVars:
+      - key: NODE_ENV
+        value: production
 
 databases:
   - name: dva-trainer-db
