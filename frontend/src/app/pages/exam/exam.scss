@@ -365,3 +365,109 @@ h1 {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
+
+@media (max-width: 600px) {
+  .intro {
+    padding: 6px 12px;
+  }
+  
+  h1 {
+    font-size: 22px;
+  }
+  
+  .intro-card {
+    padding: 14px;
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .runner-top {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .runner-top .left {
+    gap: 8px;
+    font-size: 13px;
+  }
+  
+  .timer {
+    font-size: 16px;
+  }
+  
+  .runner-body {
+    padding: 12px;
+  }
+  
+  .exam-card {
+    padding: 14px;
+  }
+  
+  .stem {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .choice {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .choice-k {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  
+  .side {
+    padding: 12px;
+  }
+  
+  .legend {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qhead {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .pill {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .badge {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  
+  .stem {
+    font-size: 13px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+  
+  .grid button {
+    padding: 6px 0;
+    font-size: 12px;
+  }
+  
+  .modal-card {
+    padding: 14px;
+  }
+}

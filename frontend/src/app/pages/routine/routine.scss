@@ -185,3 +185,61 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 600px) {
+  .routine {
+    padding: 6px 12px;
+  }
+  
+  h1 {
+    font-size: 22px;
+  }
+  
+  .pick {
+    padding: 16px 12px;
+  }
+  
+  .pick-value {
+    font-size: 24px;
+  }
+  
+  .qcard {
+    padding: 14px;
+  }
+  
+  .stem {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .choice {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .choice-k {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  
+  .feedback {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .pill {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .stem {
+    font-size: 13px;
+  }
+}
