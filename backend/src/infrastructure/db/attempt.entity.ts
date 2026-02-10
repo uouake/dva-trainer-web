@@ -55,13 +55,13 @@ export class AttemptEntity {
   // - 'anonymous': legacy and new anonymous attempts
   // - 'github': authenticated via GitHub OAuth
   @Index()
-  @Column({ type: 'varchar', length: 20, default: 'anonymous' })
+  @Column({ name: 'auth_type', type: 'varchar', length: 20, default: 'anonymous' })
   authType!: AuthType;
 
   // Optional reference to the users table (for authenticated attempts)
   // NULL for anonymous attempts (backward compatible)
   @Index()
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'github_user_id', type: 'text', nullable: true })
   githubUserId!: string | null;
 
   @CreateDateColumn({ type: 'timestamptz' })
