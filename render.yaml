@@ -19,7 +19,7 @@ services:
     runtime: node
     plan: starter
     rootDir: frontend
-    buildCommand: npm ci --include=dev && npm run build
+    buildCommand: npm ci --include=dev && npm run build:prod
     startCommand: node server.js
 
 databases:

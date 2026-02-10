@@ -21,7 +21,27 @@
       <a routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">Dashboard</a>
       <a routerLink="/routine" routerLinkActive="active" (click)="closeSidebar()">Routine Quotidienne</a>
       <a routerLink="/exam" routerLinkActive="active" (click)="closeSidebar()">Simulateur d'Examen</a>
+      <a routerLink="/glossary" routerLinkActive="active" (click)="closeSidebar()">📚 Glossaire AWS</a>
     </nav>
+
+    <!-- Theme Toggle Section -->
+    <div class="theme-section">
+      <div class="theme-label font-mono">Thème</div>
+      <div class="theme-toggle">
+        @for (option of themeOptions; track option.mode) {
+          <button
+            class="theme-btn"
+            [class.active]="themeService.themeMode() === option.mode"
+            (click)="setTheme(option.mode); closeSidebar()"
+            [attr.aria-label]="'Mode ' + option.label"
+            [title]="option.label"
+          >
+            <span class="theme-icon">{{ option.icon }}</span>
+            <span class="theme-text">{{ option.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
 
     <div class="sidebar-footer font-mono">DVA-C02 · v1.0</div>
   </aside>

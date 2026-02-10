@@ -24,8 +24,13 @@ export class GlossaryPipe implements PipeTransform {
     
     let result = value;
     
-    // Échapper le HTML pour éviter les injections
-    result = this.escapeHtml(result);
+    // Détecter si le contenu est déjà du HTML (contient des balises HTML courantes)
+    const hasHtmlTags = /<\/?(?:p|strong|em|ul|ol|li|h[1-6]|br|span|div)[^>]*>/i.test(value);
+    
+    // N'échapper le HTML que si ce n'est pas déjà du HTML formaté
+    if (!hasHtmlTags) {
+      result = this.escapeHtml(result);
+    }
     
     // Trier par longueur décroissante pour éviter les remplacements partiels
     const sortedTerms = [...this.awsTerms].sort((a, b) => b.length - a.length);

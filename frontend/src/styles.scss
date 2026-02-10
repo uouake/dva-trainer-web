@@ -4,6 +4,7 @@
    We use HSL channels so we can easily reuse the same variables like Tailwind/shadcn.
 */
 :root {
+  /* Light mode (default) */
   --background: 220 20% 97%;
   --foreground: 222 20% 12%;
 
@@ -25,6 +26,36 @@
   --radius: 0.625rem;
 
   /* Exam (dark) */
+  --exam-bg: 222 20% 8%;
+  --exam-foreground: 220 14% 90%;
+  --exam-card: 222 18% 14%;
+  --exam-card-foreground: 220 14% 90%;
+  --exam-border: 222 16% 22%;
+  --exam-muted: 222 16% 20%;
+  --exam-muted-foreground: 220 10% 55%;
+}
+
+/* Dark mode via data-theme attribute */
+[data-theme="dark"] {
+  --background: 222 20% 8%;
+  --foreground: 220 14% 90%;
+
+  --card: 222 18% 14%;
+  --card-foreground: 220 14% 90%;
+
+  --primary: 25 95% 53%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 222 16% 18%;
+  --secondary-foreground: 220 14% 90%;
+
+  --muted: 222 16% 20%;
+  --muted-foreground: 220 10% 55%;
+
+  --border: 222 16% 22%;
+  --ring: 25 95% 53%;
+
+  /* Exam mode uses same dark theme in dark mode */
   --exam-bg: 222 20% 8%;
   --exam-foreground: 220 14% 90%;
   --exam-card: 222 18% 14%;
@@ -119,4 +150,34 @@ a:focus-visible {
 .exam-mode {
   background: hsl(var(--exam-bg));
   color: hsl(var(--exam-foreground));
+}
+
+/* Glossary tooltip styles */
+.glossary-term-inline {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dashed hsl(var(--info, 200 80% 50%) / 0.6);
+  color: hsl(var(--info, 200 80% 50%));
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.glossary-term-inline:hover {
+  background: hsl(var(--info, 200 80% 50%) / 0.1);
+  border-bottom-style: solid;
+}
+
+/* Ensure glossary tooltips work in exam mode */
+.exam-mode .glossary-term-inline {
+  color: hsl(200 90% 65%);
+  border-bottom-color: hsl(200 90% 65% / 0.5);
+}
+
+.exam-mode .glossary-term-inline:hover {
+  background: hsl(200 90% 65% / 0.15);
+}
+
+/* Prevent text selection on glossary terms */
+.glossary-term-inline {
+  user-select: none;
 }

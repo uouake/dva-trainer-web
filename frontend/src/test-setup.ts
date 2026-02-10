@@ -2,6 +2,7 @@
 import 'zone.js';
 import 'zone.js/testing';
 import { TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 
 // Reset TestBed before each test to avoid "test module already instantiated" errors
 beforeEach(() => {

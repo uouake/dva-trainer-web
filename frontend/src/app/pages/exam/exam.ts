@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi, Question } from '../../api/dva-api';
 import { UserIdService } from '../../core/user-id.service';
+import { GlossaryPipe } from '../../pipes/glossary.pipe';
+import { GlossaryHandlerDirective } from '../../components/glossary/glossary-handler.directive';
+import { GlossaryTooltipPopupComponent } from '../../components/glossary/glossary-tooltip-popup.component';
 
 // Exam page redesigned to match aws-exam-buddy.
 //
@@ -15,7 +18,7 @@ type Phase = 'intro' | 'exam' | 'results';
 
 @Component({
   selector: 'app-exam',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, GlossaryPipe, GlossaryHandlerDirective, GlossaryTooltipPopupComponent],
   templateUrl: './exam.html',
   styleUrl: './exam.scss',
 })

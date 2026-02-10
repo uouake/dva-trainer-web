@@ -4,6 +4,9 @@ import { RouterLink } from '@angular/router';
 import { DvaApi, Question } from '../../api/dva-api';
 import { UserIdService } from '../../core/user-id.service';
 import { MultiAnswerBadgeComponent } from '../../components/multi-answer-badge/multi-answer-badge.component';
+import { GlossaryPipe } from '../../pipes/glossary.pipe';
+import { GlossaryHandlerDirective } from '../../components/glossary/glossary-handler.directive';
+import { GlossaryTooltipPopupComponent } from '../../components/glossary/glossary-tooltip-popup.component';
 
 // Daily routine redesigned to match aws-exam-buddy.
 //
@@ -15,7 +18,7 @@ type Phase = 'intro' | 'session' | 'results';
 
 @Component({
   selector: 'app-routine',
-  imports: [CommonModule, RouterLink, MultiAnswerBadgeComponent],
+  imports: [CommonModule, RouterLink, MultiAnswerBadgeComponent, GlossaryPipe, GlossaryHandlerDirective, GlossaryTooltipPopupComponent],
   templateUrl: './routine.html',
   styleUrl: './routine.scss',
 })

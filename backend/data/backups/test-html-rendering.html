@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de rendu HTML - Explications pédagogiques</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .question-title {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        .explanation {
+            background: #f8f9fa;
+            border-left: 4px solid #ff9900;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+        }
+        .explanation p {
+            margin: 0 0 12px 0;
+        }
+        .explanation p:last-child {
+            margin-bottom: 0;
+        }
+        .explanation strong {
+            color: #ff9900;
+            font-weight: 600;
+        }
+        .explanation em {
+            font-style: italic;
+            color: #555;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #ff9900;
+            color: white;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+        ul {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+        li {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎓 Test de rendu HTML - DVA-C02 Questions</h1>
+    <p>Cette page montre le rendu des explications pédagogiques converties de Markdown vers HTML.</p>
+    
+    <div class="question-card">
+        <div class="badge">Question 57 - Sécurité</div>
+        <h3 class="question-title">ECR Image Scanning</h3>
+        <div class="explanation">
+            <p><strong>🏰 Imagine ton immeuble résidentiel</strong> : plusieurs appartements avec systèmes de sécurité.</p>
+<p><strong>VPC</strong> = <strong>Tout l'immeuble</strong> 🏢 - Ton terrain privé dans le cloud.</p>
+<p><strong>Subnet</strong> = <strong>Chaque étage</strong> 🏠 - Public (rdc) ou Privé (résidents).</p>
+<p><strong>Security Group</strong> = <strong>La porte de ton appart</strong> 🚪 - Qui peut frapper ? (Stateful = se souvient des entrées).</p>
+<p><strong>NACL</strong> = <strong>Le digicode de l'étage</strong> 🔢 - Filtre au niveau de l'étage (Stateless = sans mémoire).</p>
+<p><strong>🧠 Mnémotechnique :</strong> "<strong>S</strong>G = <strong>S</strong>ouviens des connexions" | "<strong>N</strong>ACL = <strong>N</strong>e souviens de <strong>R</strong>ien"</p>
+<p><strong>Quoi vérifier d'abord :</strong> Le badge de l'EC2 (rôle IAM) autorise-t-il S3 ? Puis la policy du bucket S3.</p>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="badge">Question 13 - Développement</div>
+        <h3 class="question-title">SNS vs SQS</h3>
+        <div class="explanation">
+            <p><strong>Imagine une cantine au lycée : plusieurs classes commandent des repas. La cantine (le système) prépare tout, puis doit prévenir chaque classe quand SA commande est prête, sans déranger les autres.</strong></p>
+<p>Concept : au lieu d'avoir un messager par classe, tu as un seul panneau d'affichage central. Mais chaque annonce a une étiquette (ex: "3eB", "2nde1").
+API Gateway = le guichet où les classes passent commande. Lambda = la cuisine qui prépare.
+SNS = le panneau d'affichage qui envoie des notifications.
+Réponse C : la cuisine poste sur UN seul panneau, avec une étiquette "partenaire X".
+Chaque partenaire s'abonne au panneau, mais met un filtre : il ne lit que les messages avec SON étiquette.
+Donc chacun reçoit seulement ses commandes, et ajouter un nouveau partenaire = juste un nouvel abonnement + filtre, presque pas de code.
+A ferait un panneau par partenaire (ça grossit trop). B dupliquerait la cuisine. D enverrait tout à tout le monde.</p>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="badge">Question 140 - CI/CD</div>
+        <h3 class="question-title">CodePipeline / CodeCommit</h3>
+        <div class="explanation">
+            <p><strong>🍔 Imagine une chaîne de resto fast-food</strong> : plusieurs recettes de burger qui évoluent.</p>
+<p><strong>Version</strong> = C'est comme <strong>le numéro de recette imprimé</strong> 📜 - Immuable, gravé dans le marbre (v1 = classique, v2 = nouvelle).</p>
+<p><strong>Alias</strong> = C'est comme <strong>les pancartes "SPÉCIALITÉ DU MOMENT"</strong> 🪧 - Pointe vers une version, changeable ("prod" → v2, "beta" → v3).</p>
+<p><strong>🧠 Mnémotechnique :</strong> "<strong>VER</strong>sion = <strong>VER</strong>rouillé (chiffre fixe)" | "<strong>AL</strong>ias = <strong>AL</strong>ternatif (étiquette mobile)"</p>
+<p><strong>Pourquoi créer une version :</strong> Pour figer l'ancien code avant de modifier, pouvoir revenir en arrière si problème.</p>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="badge">Question 445 - Déploiement</div>
+        <h3 class="question-title">AWS SAM</h3>
+        <div class="explanation">
+            <p><strong>Imagine que tu dois organiser un spectacle au collège avec un plan déjà écrit (le "template" SAM). Tu dois d'abord préparer tous les accessoires dans des cartons, puis donner le plan + les cartons au proviseur pour qu'il installe tout dans la salle.</strong></p>
+<p>Le template SAM, c'est comme le plan du spectacle : il décrit quoi installer et où. Mais avant d'installer, il faut "emballer" les fichiers (code, images, etc.) dans un format prêt à être transporté : c'est l'étape package. Ensuite, il faut lancer l'installation réelle à partir du plan : c'est l'étape deploy. L'option A fait exactement ça avec CloudFormation : "package" prépare les cartons, puis "deploy" demande au proviseur (CloudFormation) de monter le spectacle. Les autres options sautent le proviseur, ou essaient d'installer à la main un seul élément (comme juste une scène), donc ce n'est pas la bonne méthode pour un template SAM existant.</p>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="badge">Question 119 - Développement</div>
+        <h3 class="question-title">WebSocket / AppConfig</h3>
+        <div class="explanation">
+            <p><strong>🎮 Imagine ton jeu vidéo favori</strong> : les développeurs veulent tester une nouvelle arme légendaire avec seulement 10% des joueurs.</p>
+<p><strong>AppConfig</strong> = C'est comme <strong>les mises à jour silencieuses</strong> 🔄 - Active/désactive des fonctionnalités sans changer le code (interrupteurs).</p>
+<p><strong>AppSync</strong> = C'est comme <strong>les paramètres du jeu en ligne</strong> ⚙️ - Gère QUI voit QUOI en temps réel ("Montre la nouvelle arme aux joueurs VIP").</p>
+<p><strong>🧠 Mnémotechnique :</strong> "App<strong>Config</strong> = <strong>CONFiguration</strong> discrète" | "App<strong>Sync</strong> = <strong>SYNChronise</strong> les joueurs"</p>
+<p><strong>Pourquoi AppConfig ici :</strong> C'est pour activer/désactiver des boutons/fonctionnalités, pas pour synchroniser des données entre utilisateurs.</p>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <div class="badge">Question 33 - Déploiement</div>
+        <h3 class="question-title">CloudFront / SSL</h3>
+        <div class="explanation">
+            <p><strong>Imagine que ton API est une pizzeria à Columbus (us-east-2). CloudFront, c'est comme un réseau de livreurs partout dans le pays. Ton nom de domaine, c'est l'enseigne "MaPizza.com". Le certificat SSL/TLS, c'est la carte officielle qui prouve que l'enseigne est vraie et pas une copie.</strong></p>
+<p>Concept : CloudFront ne peut livrer "MaPizza.com" que si la carte officielle est déposée au bureau central national, pas dans une petite mairie locale. Sur AWS, ce "bureau central" pour CloudFront est toujours la région us-east-1. Donc tu importes le certificat dans ACM en us-east-1. Ensuite, pour que les clients tapent "MaPizza.com" et tombent sur les livreurs CloudFront, tu mets un panneau dans l'annuaire (DNS) qui pointe vers CloudFront : c'est un CNAME. Un A record, c'est plutôt une adresse fixe, mais CloudFront fonctionne comme un nom de destination. Donc D est correct : certificat dans ACM us-east-1 + DNS CNAME.</p>
+        </div>
+    </div>
+
+    <h2>✅ Vérification du formatage</h2>
+    <ul>
+        <li><strong>Gras</strong> : Les titres et concepts clés sont en gras (orange)</li>
+        <li><em>Italique</em> : Si présent, serait en italique</li>
+        <li>Paragraphes : Chaque bloc est dans un &lt;p&gt;</li>
+        <li>Listes : Supportées avec &lt;ul&gt;/&lt;li&gt;</li>
+    </ul>
+
+    <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; text-align: center;">
+        <p>Généré le 10 février 2026 | Conversion Markdown → HTML</p>
+    </footer>
+</body>
+</html>

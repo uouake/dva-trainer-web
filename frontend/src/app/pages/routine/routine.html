@@ -50,7 +50,7 @@
 
       <app-multi-answer-badge [requiredAnswers]="q.requiredAnswers || 1"></app-multi-answer-badge>
 
-      <pre class="stem">{{ q.stem }}</pre>
+      <pre class="stem" [appGlossaryHandler]="q.stem" [innerHTML]="q.stem | glossary"></pre>
 
       <!-- Explication pédagogique visible pendant la routine -->
       <div class="learning-hint card" style="background: hsl(var(--info)/0.08); border-color: hsl(var(--info)/0.25); margin: 14px 0; padding: 14px; border-radius: 12px;">
@@ -58,8 +58,7 @@
           <span>💡</span>
           <span style="font-size:13px;">Pour t'aider à comprendre</span>
         </div>
-        <div class="explanation-text" style="font-size:14px; line-height:1.6; color: hsl(var(--foreground)/0.9); white-space: pre-wrap;">
-          {{ q.frExplanationPedagogique || q.frExplanation }}
+        <div class="explanation-text" style="font-size:14px; line-height:1.6; color: hsl(var(--foreground)/0.9); white-space: pre-wrap;" [appGlossaryHandler]="q.frExplanationPedagogique || q.frExplanation" [innerHTML]="(q.frExplanationPedagogique || q.frExplanation) | glossary">
         </div>
       </div>
 
@@ -75,9 +74,10 @@
           role="radio"
           [attr.aria-checked]="selectedChoice === k"
           [attr.aria-label]="'Option ' + k + ': ' + q.choices[k]"
+          [appGlossaryHandler]="q.choices[k]"
         >
           <div class="choice-k" aria-hidden="true">{{ k }}</div>
-          <div class="choice-body" aria-hidden="true">{{ q.choices[k] }}</div>
+          <div class="choice-body" aria-hidden="true" [innerHTML]="q.choices[k] | glossary"></div>
         </button>
       </div>
     </div>

@@ -64,7 +64,7 @@
             <button class="flag" (click)="toggleFlag()" [attr.aria-label]="isFlagged(q) ? 'Retirer le marqueur de la question ' + (index + 1) : 'Marquer la question ' + (index + 1) + ' pour revision'" [attr.aria-pressed]="isFlagged(q)">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
           </div>
 
-          <pre class="stem">{{ q.stem }}</pre>
+          <pre class="stem" [appGlossaryHandler]="q.stem" [innerHTML]="q.stem | glossary"></pre>
 
           <div class="choices">
             <button
@@ -73,9 +73,10 @@
               (click)="pick(k)"
               [disabled]="submittingAttempt || answers.has(q.id)"
               [class.selected]="chosenFor(q) === k"
+              [appGlossaryHandler]="q.choices[k]"
             >
               <div class="choice-k">{{ k }}</div>
-              <div class="choice-body">{{ q.choices[k] }}</div>
+              <div class="choice-body" [innerHTML]="q.choices[k] | glossary"></div>
             </button>
           </div>
         </div>
