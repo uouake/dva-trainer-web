@@ -4,47 +4,57 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const staticPath = path.join(__dirname, 'dist/frontend/browser');
-const indexPath = path.join(staticPath, 'index.html');
-
 console.log('=== SERVER STARTUP ===');
 console.log('__dirname:', __dirname);
-console.log('Current directory contents:', fs.readdirSync(__dirname));
+console.log('cwd:', process.cwd());
 
-// Check if dist exists
-const distPath = path.join(__dirname, 'dist');
-console.log('dist exists:', fs.existsSync(distPath));
-if (fs.existsSync(distPath)) {
-  console.log('dist contents:', fs.readdirSync(distPath));
-  const frontendPath = path.join(distPath, 'frontend');
-  console.log('frontend exists:', fs.existsSync(frontendPath));
-  if (fs.existsSync(frontendPath)) {
-    console.log('frontend contents:', fs.readdirSync(frontendPath));
-    const browserPath = path.join(frontendPath, 'browser');
-    console.log('browser exists:', fs.existsSync(browserPath));
-    if (fs.existsSync(browserPath)) {
-      console.log('browser contents:', fs.readdirSync(browserPath));
-    }
+// Essayer plusieurs chemins possibles pour le build
+const possiblePaths = [
+  path.join(__dirname, 'dist/frontend/browser'),
+  path.join(__dirname, 'dist/frontend'),
+  path.join(__dirname, 'dist'),
+  path.join(process.cwd(), 'dist/frontend/browser'),
+  path.join(process.cwd(), 'dist/frontend'),
+  path.join(process.cwd(), 'dist'),
+  '/opt/render/project/src/frontend/dist/frontend/browser',
+];
+
+let staticPath = null;
+let indexPath = null;
+
+for (const testPath of possiblePaths) {
+  const testIndex = path.join(testPath, 'index.html');
+  console.log(`Testing: ${testPath} -> exists: ${fs.existsSync(testPath)}, index exists: ${fs.existsSync(testIndex)}`);
+  if (fs.existsSync(testIndex)) {
+    staticPath = testPath;
+    indexPath = testIndex;
+    console.log('✓ Found valid path:', staticPath);
+    break;
   }
 }
 
-console.log('Static path:', staticPath);
-console.log('Static path exists:', fs.existsSync(staticPath));
-console.log('Index exists:', fs.existsSync(indexPath));
+if (!staticPath) {
+  console.error('ERROR: Could not find index.html in any known location!');
+  // List all files in current dir for debugging
+  console.log('Current dir contents:', fs.readdirSync(__dirname));
+}
+
 console.log('======================');
 
-// Servir les fichiers statiques depuis le dossier browser
-app.use(express.static(staticPath));
+if (staticPath) {
+  // Servir les fichiers statiques
+  app.use(express.static(staticPath));
 
-// Fallback vers index.html pour toutes les routes (SPA)
-app.get('*', (req, res) => {
-  console.log('Fallback route hit:', req.path);
-  if (fs.existsSync(indexPath)) {
+  // Fallback vers index.html pour toutes les routes (SPA)
+  app.get('*', (req, res) => {
+    console.log('Fallback:', req.path);
     res.sendFile(indexPath);
-  } else {
-    res.status(404).send('index.html not found at ' + indexPath);
-  }
-});
+  });
+} else {
+  app.get('*', (req, res) => {
+    res.status(500).send('Server misconfiguration: index.html not found');
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
