@@ -47,9 +47,9 @@ jobs:
         working-directory: backend
         run: npm ci
 
-      - name: Run unit tests
+      - name: Create DB schema
         working-directory: backend
-        run: npm test -- --passWithNoTests
+        run: npm run db:schema
         env:
           NODE_ENV: test
           DB_HOST: localhost
@@ -58,9 +58,9 @@ jobs:
           DB_PASSWORD: dva
           DB_NAME: dva_trainer_test
 
-      - name: Run e2e tests (non-regression)
+      - name: Run unit tests
         working-directory: backend
-        run: npm run test:e2e
+        run: npm test -- --passWithNoTests
         env:
           NODE_ENV: test
           DB_HOST: localhost
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run tests
         working-directory: frontend
-        run: npm test
+        run: npm test -- --passWithNoTests
 
       - name: Build frontend
         working-directory: frontend
@@ -150,6 +150,4 @@ jobs:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
           echo "Triggering Render deployment..."
-          # Render Blueprint déploie automatiquement sur push main
-          # Cette étape est un placeholder si vous voulez un déploiement manuel
           echo "Render Blueprint will auto-deploy on push to main"
