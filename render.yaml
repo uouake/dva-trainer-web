@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci && npx nest build && ls -la dist/
-    startCommand: NODE_ENV=production npm run start:prod
+    buildCommand: npm ci && npm run build && ls -la && ls -la dist/ 2>/dev/null || echo "dist not found"
+    startCommand: NODE_ENV=production node start-prod.js
     envVars:
       - key: PORT
         value: 10000
