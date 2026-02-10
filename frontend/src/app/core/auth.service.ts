@@ -85,8 +85,11 @@ export class AuthService {
    * Store token and update state
    */
   setToken(token: string): void {
-    if (this.isBrowser) {
+    try {
       localStorage.setItem(TOKEN_KEY, token);
+      console.log('[Auth] Token saved to localStorage');
+    } catch (e) {
+      console.error('[Auth] Failed to save token:', e);
     }
     this.stateSubject.next({
       ...this.stateSubject.value,
@@ -99,8 +102,11 @@ export class AuthService {
    * Store user info and update state
    */
   setUser(user: AuthUser): void {
-    if (this.isBrowser) {
+    try {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
+      console.log('[Auth] User saved to localStorage:', user);
+    } catch (e) {
+      console.error('[Auth] Failed to save user:', e);
     }
     this.stateSubject.next({
       ...this.stateSubject.value,
@@ -197,53 +203,42 @@ export class AuthService {
    * Load authentication state from localStorage
    */
   private loadStateFromStorage(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    const token = localStorage.getItem(TOKEN_KEY);
-    const userJson = localStorage.getItem(USER_KEY);
-    
-    // Debug: log to see what's in storage
-    console.log('[Auth] Loading from storage:', { 
-      hasToken: !!token, 
-      hasUser: !!userJson,
-      tokenLength: token?.length,
-      userData: userJson
-    });
-    
-    let user: AuthUser | null = null;
-    if (userJson) {
-      try {
-        user = JSON.parse(userJson);
-        console.log('[Auth] User loaded from storage:', user);
-      } catch (e) {
-        console.error('[Auth] Failed to parse user JSON:', e);
-        localStorage.removeItem(USER_KEY);
-      }
-    }
-
-    if (token) {
-      console.log('[Auth] Token found, setting authenticated state');
-      this.stateSubject.next({
-        isAuthenticated: true,
-        token,
-        user,
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+      const userJson = localStorage.getItem(USER_KEY);
+      
+      console.log('[Auth] Loading from storage:', { 
+        hasToken: !!token, 
+        hasUser: !!userJson,
+        tokenPreview: token ? token.substring(0, 20) + '...' : null
       });
       
-      // Validate token by fetching user
-      this.fetchUser().subscribe({
-        next: (fetchedUser) => {
-          console.log('[Auth] Token validated, user fetched:', fetchedUser);
-        },
-        error: (err) => {
-          console.error('[Auth] Token validation failed:', err);
-          // On error, clear storage to prevent infinite loops
-          this.logout();
+      let user: AuthUser | null = null;
+      if (userJson) {
+        try {
+          user = JSON.parse(userJson);
+          console.log('[Auth] User loaded from storage:', user);
+        } catch (e) {
+          console.error('[Auth] Failed to parse user JSON:', e);
+          localStorage.removeItem(USER_KEY);
         }
-      });
-    } else {
-      console.log('[Auth] No token found in storage');
+      }
+
+      if (token) {
+        console.log('[Auth] Token found, setting authenticated state');
+        this.stateSubject.next({
+          isAuthenticated: true,
+          token,
+          user,
+        });
+        
+        // Don't validate on load - just use stored data
+        // This prevents logout on refresh
+      } else {
+        console.log('[Auth] No token found in storage');
+      }
+    } catch (e) {
+      console.error('[Auth] Error loading from storage:', e);
     }
   }
   

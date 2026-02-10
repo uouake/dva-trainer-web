@@ -73,6 +73,8 @@ export class AuthCallbackPage implements OnInit {
       }
 
       if (token) {
+        console.log('[Auth Callback] Token received:', token.substring(0, 20) + '...');
+        
         // Stocker le token
         this.authService.setToken(token);
         
@@ -85,12 +87,17 @@ export class AuthCallbackPage implements OnInit {
           email: params['email'] || undefined
         };
         
+        console.log('[Auth Callback] User data:', user);
+        
         if (user.username) {
           this.authService.setUser(user);
         }
 
-        // Rediriger vers le dashboard
-        this.router.navigate(['/dashboard']);
+        // Attendre un peu pour s'assurer que localStorage est mis à jour
+        setTimeout(() => {
+          console.log('[Auth Callback] Redirecting to dashboard...');
+          this.router.navigate(['/dashboard']);
+        }, 100);
       } else {
         // Pas de token, rediriger vers login
         this.router.navigate(['/login']);
