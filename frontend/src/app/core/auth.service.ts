@@ -204,10 +204,13 @@ export class AuthService {
     const token = localStorage.getItem(TOKEN_KEY);
     const userJson = localStorage.getItem(USER_KEY);
     
+    console.log('[Auth] Loading from storage:', { hasToken: !!token, hasUser: !!userJson });
+    
     let user: AuthUser | null = null;
     if (userJson) {
       try {
         user = JSON.parse(userJson);
+        console.log('[Auth] User loaded from storage:', user);
       } catch {
         // Invalid JSON, clear it
         localStorage.removeItem(USER_KEY);
@@ -215,6 +218,7 @@ export class AuthService {
     }
 
     if (token) {
+      console.log('[Auth] Token found, setting authenticated state');
       this.stateSubject.next({
         isAuthenticated: true,
         token,
@@ -222,7 +226,16 @@ export class AuthService {
       });
       
       // Validate token by fetching user
-      this.fetchUser().subscribe();
+      this.fetchUser().subscribe({
+        next: (user) => {
+          console.log('[Auth] Token validated, user:', user);
+        },
+        error: (err) => {
+          console.error('[Auth] Token validation failed:', err);
+        }
+      });
+    } else {
+      console.log('[Auth] No token found');
     }
   }
 }

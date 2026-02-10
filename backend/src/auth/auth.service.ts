@@ -8,6 +8,7 @@ import { UserEntity } from '../infrastructure/db/user.entity';
 export interface GitHubProfile {
   id: string;
   username: string;
+  name?: string;
   email?: string;
   avatarUrl?: string;
 }
@@ -149,6 +150,7 @@ export class AuthService {
     return {
       id: String(data.id),
       username: data.login,
+      name: data.name || data.login, // Récupère le vrai nom, fallback sur login
       email: data.email,
       avatarUrl: data.avatar_url,
     };
@@ -164,16 +166,14 @@ export class AuthService {
       user = new UserEntity();
       user.githubId = profile.id;
       user.username = profile.username;
-      user.name = profile.username;
+      user.name = profile.name || profile.username; // Utilise le vrai nom
       user.email = profile.email;
       user.avatarUrl = profile.avatarUrl;
       user = await this.userRepo.save(user);
     } else {
       // Update profile info if changed
-      if (profile.username) {
-        user.username = profile.username;
-        user.name = profile.username;
-      }
+      if (profile.username) user.username = profile.username;
+      if (profile.name) user.name = profile.name;
       if (profile.email) user.email = profile.email;
       if (profile.avatarUrl) user.avatarUrl = profile.avatarUrl;
       user = await this.userRepo.save(user);
