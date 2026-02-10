@@ -28,16 +28,16 @@
     <div class="auth-section">
       @if (isAuthenticated()) {
         <div class="user-profile">
-          @if (getUser()?.avatar_url) {
-            <img [src]="getUser()?.avatar_url" alt="Avatar" class="user-avatar">
+          @if (getUser()?.avatarUrl) {
+            <img [src]="getUser()?.avatarUrl" alt="Avatar" class="user-avatar">
           } @else {
             <div class="user-avatar avatar-placeholder">
-              {{ getUser()?.login?.charAt(0)?.toUpperCase() || '?' }}
+              {{ getUser()?.username?.charAt(0)?.toUpperCase() || '?' }}
             </div>
           }
           <div class="user-info">
-            <div class="user-name">{{ getUser()?.name || getUser()?.login || 'Utilisateur' }}</div>
-            <div class="user-login font-mono" *ngIf="getUser()?.login">&#64;{{ getUser()?.login }}</div>
+            <div class="user-name">{{ getUser()?.name || getUser()?.username || 'Utilisateur' }}</div>
+            <div class="user-login font-mono" *ngIf="getUser()?.username">&#64;{{ getUser()?.username }}</div>
           </div>
         </div>
         <button class="logout-btn" (click)="logout()">

@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 export interface AuthUser {
   id: string;
   username: string;
+  name?: string;
   email?: string;
   avatarUrl?: string;
 }
