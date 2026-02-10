@@ -32,19 +32,26 @@ export const CONCEPT_LABELS: Record<string, string> = {
   'api-gateway-stages': 'Stages API Gateway',
   'api-gateway-throttling': 'Limitation API Gateway',
   
-  // CloudWatch
+  // CloudWatch - avec underscores
   'cloudwatch-logs': 'Logs CloudWatch',
   'cloudwatch-metrics': 'Métriques CloudWatch',
   'cloudwatch-alarms': 'Alarmes CloudWatch',
+  'cloudwatch_logs_metrics': 'Logs et Métriques CloudWatch',
   
   // EC2 / ECS
   'ec2-instance': 'Instances EC2 (Serveurs)',
   'ecs-task': 'Tâches ECS (Conteneurs)',
   'ecs-service': 'Services ECS',
   
+  // ECR
+  'ecr-image-scanning': 'Scan d\'images ECR',
+  'ecr_image_scanning': 'Scan d\'images ECR (Sécurité)',
+  
   // SNS / SQS
   'sns-topic': 'Topics SNS (Notifications)',
   'sqs-queue': 'Files SQS (Messages)',
+  'sqs-visibility-timeout': 'Timeout de visibilité SQS',
+  'sqs_visibility_timeout': 'Timeout de visibilité SQS',
   
   // Cognito
   'cognito-user-pool': 'Pools d\'utilisateurs Cognito',
@@ -78,6 +85,7 @@ export const CONCEPT_LABELS: Record<string, string> = {
   
   // Secrets Manager
   'secrets-manager': 'Secrets Manager (Mots de passe)',
+  'secrets_manager_vs_ssm': 'Secrets Manager vs SSM (Stockage secrets)',
   
   // Systems Manager
   'ssm-parameter': 'Paramètres Systems Manager',
@@ -87,22 +95,82 @@ export const CONCEPT_LABELS: Record<string, string> = {
   
   // Step Functions
   'step-functions': 'Step Functions (Workflows)',
+  
+  // X-Ray
+  'xray': 'AWS X-Ray (Tracing)',
+  
+  // Kinesis
+  'kinesis': 'Kinesis (Streaming données)',
+  
+  // AppConfig
+  'appconfig': 'AppConfig (Configuration)',
+  
+  // Batch
+  'batch': 'AWS Batch (Traitement par lots)',
+  
+  // SAM
+  'sam': 'AWS SAM (Serverless Framework)',
+  
+  // CDK
+  'cdk': 'AWS CDK (Infrastructure as Code)',
+  
+  // Cloud9
+  'cloud9': 'Cloud9 (IDE Cloud)',
 };
 
 /**
  * Transforme une clé technique en nom lisible
- * Si la clé n'est pas dans le mapping, retourne la clé formatée
+ * Si la clé n'est pas dans le mapping, tente de formater intelligemment
  */
 export function getConceptLabel(conceptKey: string): string {
+  if (!conceptKey) return 'Concept inconnu';
+  
   // Chercher dans le mapping
   if (CONCEPT_LABELS[conceptKey]) {
     return CONCEPT_LABELS[conceptKey];
   }
   
-  // Fallback: formater la clé
-  // Remplacer les tirets par des espaces et mettre en majuscule la première lettre
-  return conceptKey
+  // Fallback: formater la clé intelligemment
+  // Remplacer underscores et tirets par des espaces
+  const words = conceptKey
+    .replace(/_/g, '-')
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .filter(word => word.length > 0);
+  
+  // Mots à mettre en majuscule (acronymes AWS)
+  const acronyms = ['iam', 'sns', 'sqs', 'rds', 'vpc', 'ec2', 'ecs', 's3', 'ssm', 'api', 'cdn', 'dns', 'url', 'arn', 'kms'];
+  
+  // Mots courants à traduire ou formater
+  const translations: Record<string, string> = {
+    'logs': 'Logs',
+    'metrics': 'Métriques',
+    'scanning': 'Scan',
+    'scan': 'Scan',
+    'visibility': 'Visibilité',
+    'timeout': 'Timeout',
+    'manager': 'Manager',
+    'secrets': 'Secrets',
+    'parameter': 'Paramètre',
+    'image': 'Image',
+    'vs': 'vs',
+  };
+  
+  const formatted = words.map(word => {
+    const lower = word.toLowerCase();
+    
+    // Si c'est un acronyme, le mettre en majuscule
+    if (acronyms.includes(lower)) {
+      return lower.toUpperCase();
+    }
+    
+    // Si on a une traduction, l'utiliser
+    if (translations[lower]) {
+      return translations[lower];
+    }
+    
+    // Sinon, première lettre en majuscule
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  });
+  
+  return formatted.join(' ');
 }
