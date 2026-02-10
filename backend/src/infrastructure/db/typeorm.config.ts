@@ -1,7 +1,6 @@
 import { DataSourceOptions } from 'typeorm';
 import { requireEnv, envInt, env } from '../../config/env';
-import { QuestionEntity } from './typeorm.entities';
-import { AttemptEntity } from './attempt.entity';
+import { QuestionEntity, UserEntity, AttemptEntity } from './typeorm.entities';
 
 // Parse DATABASE_URL if provided (Render style), otherwise use individual vars
 function parseDatabaseUrl(): { host: string; port: number; username: string; password: string; database: string } | null {
@@ -44,7 +43,7 @@ export function makeTypeOrmOptions(): DataSourceOptions {
 
     // Entities are the TypeORM representations of our DB tables.
     // They are NOT the same thing as Domain entities.
-    entities: [QuestionEntity, AttemptEntity],
+    entities: [QuestionEntity, UserEntity, AttemptEntity],
 
     // Migrations are generated as TypeScript during development.
     // When we build (`nest build`), they will be compiled to JS under dist/.

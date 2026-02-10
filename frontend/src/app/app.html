@@ -24,6 +24,34 @@
       <a routerLink="/glossary" routerLinkActive="active" (click)="closeSidebar()">📚 Glossaire AWS</a>
     </nav>
 
+    <!-- Auth Section -->
+    <div class="auth-section">
+      @if (isAuthenticated()) {
+        <div class="user-profile">
+          @if (getUser()?.avatar_url) {
+            <img [src]="getUser()?.avatar_url" alt="Avatar" class="user-avatar">
+          } @else {
+            <div class="user-avatar avatar-placeholder">
+              {{ getUser()?.login?.charAt(0)?.toUpperCase() || '?' }}
+            </div>
+          }
+          <div class="user-info">
+            <div class="user-name">{{ getUser()?.name || getUser()?.login || 'Utilisateur' }}</div>
+            <div class="user-login font-mono" *ngIf="getUser()?.login">&#64;{{ getUser()?.login }}</div>
+          </div>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">🚪</span>
+          <span>Déconnexion</span>
+        </button>
+      } @else {
+        <button class="login-btn" (click)="login()">
+          <span class="login-icon">🔐</span>
+          <span>Se connecter</span>
+        </button>
+      }
+    </div>
+
     <!-- Theme Toggle Section -->
     <div class="theme-section">
       <div class="theme-label font-mono">Thème</div>

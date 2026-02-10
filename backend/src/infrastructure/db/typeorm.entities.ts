@@ -5,7 +5,12 @@ import {
   Index,
   PrimaryColumn,
   UpdateDateColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
+// Re-export all entities for convenience
+export { UserEntity } from './user.entity';
+export { AttemptEntity } from './attempt.entity';
 
 // Database entity for a question.
 //

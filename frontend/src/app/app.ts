@@ -6,19 +6,22 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ThemeService, ThemeMode } from './core/theme.service';
+import { AuthService, User } from './core/auth.service';
 
 @Component({
   selector: 'app-root',
   // Because this is a standalone component, we must explicitly import
   // all router directives we use in the template (routerLink, routerLinkActive, router-outlet).
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('frontend');
   protected readonly themeService = inject(ThemeService);
+  protected readonly authService = inject(AuthService);
 
   // When the user is in the exam runner, we want a true fullscreen experience.
   // That means: no sidebar, no outer padding.
@@ -59,5 +62,25 @@ export class App {
 
   setTheme(mode: ThemeMode): void {
     this.themeService.setTheme(mode);
+  }
+
+  // Auth methods
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  getUser(): User | null {
+    return this.authService.getUser();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+    this.closeSidebar();
+  }
+
+  login(): void {
+    this.router.navigate(['/login']);
+    this.closeSidebar();
   }
 }

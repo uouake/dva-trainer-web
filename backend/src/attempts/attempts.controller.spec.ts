@@ -81,6 +81,8 @@ describe('AttemptsController', () => {
         mode: 'daily' as AttemptMode,
         selectedChoice: 'B',
         isCorrect: true,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       };
       attemptsRepo.save.mockResolvedValue(savedAttempt);
@@ -109,6 +111,8 @@ describe('AttemptsController', () => {
         mode: 'exam' as AttemptMode,
         selectedChoice: 'A',
         isCorrect: false,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       };
       attemptsRepo.save.mockResolvedValue(savedAttempt);
@@ -137,6 +141,8 @@ describe('AttemptsController', () => {
         mode: 'daily' as AttemptMode,
         selectedChoice: 'A',
         isCorrect: true,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       });
 
@@ -161,6 +167,8 @@ describe('AttemptsController', () => {
         mode: 'exam' as AttemptMode,
         selectedChoice: 'D',
         isCorrect: true,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       });
 
