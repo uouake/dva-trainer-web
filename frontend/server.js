@@ -7,11 +7,31 @@ const PORT = process.env.PORT || 3000;
 const staticPath = path.join(__dirname, 'dist/frontend/browser');
 const indexPath = path.join(staticPath, 'index.html');
 
+console.log('=== SERVER STARTUP ===');
 console.log('__dirname:', __dirname);
+console.log('Current directory contents:', fs.readdirSync(__dirname));
+
+// Check if dist exists
+const distPath = path.join(__dirname, 'dist');
+console.log('dist exists:', fs.existsSync(distPath));
+if (fs.existsSync(distPath)) {
+  console.log('dist contents:', fs.readdirSync(distPath));
+  const frontendPath = path.join(distPath, 'frontend');
+  console.log('frontend exists:', fs.existsSync(frontendPath));
+  if (fs.existsSync(frontendPath)) {
+    console.log('frontend contents:', fs.readdirSync(frontendPath));
+    const browserPath = path.join(frontendPath, 'browser');
+    console.log('browser exists:', fs.existsSync(browserPath));
+    if (fs.existsSync(browserPath)) {
+      console.log('browser contents:', fs.readdirSync(browserPath));
+    }
+  }
+}
+
 console.log('Static path:', staticPath);
-console.log('Index path:', indexPath);
 console.log('Static path exists:', fs.existsSync(staticPath));
 console.log('Index exists:', fs.existsSync(indexPath));
+console.log('======================');
 
 // Servir les fichiers statiques depuis le dossier browser
 app.use(express.static(staticPath));
