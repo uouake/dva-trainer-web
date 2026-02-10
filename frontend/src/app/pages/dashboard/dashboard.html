@@ -87,4 +87,13 @@
 
     <p class="muted domain-hint" style="margin-top:12px">(Le breakdown par domaine arrive dans une itération suivante.)</p>
   </div>
+  
+  <!-- Debug Auth Status (temporary) -->
+  <div class="card" *ngIf="!loading && !error" style="margin-top: 20px; padding: 12px; background: hsl(var(--muted)); font-size: 12px;">
+    <h3 style="margin: 0 0 8px; font-size: 13px;">Debug Auth</h3>
+    <div>Connecté: {{ isAuthenticated() ? 'Oui' : 'Non' }}</div>
+    <div>Token: {{ debugInfo.token ? 'Présent' : 'Absent' }}</div>
+    <div>User: {{ debugInfo.user ? 'Présent' : 'Absent' }}</div>
+    <button class="btn-ghost" style="margin-top: 8px; padding: 4px 8px; font-size: 11px;" (click)="refreshDebug()">Rafraîchir</button>
+  </div>
 </div>

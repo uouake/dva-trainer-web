@@ -204,15 +204,21 @@ export class AuthService {
     const token = localStorage.getItem(TOKEN_KEY);
     const userJson = localStorage.getItem(USER_KEY);
     
-    console.log('[Auth] Loading from storage:', { hasToken: !!token, hasUser: !!userJson });
+    // Debug: log to see what's in storage
+    console.log('[Auth] Loading from storage:', { 
+      hasToken: !!token, 
+      hasUser: !!userJson,
+      tokenLength: token?.length,
+      userData: userJson
+    });
     
     let user: AuthUser | null = null;
     if (userJson) {
       try {
         user = JSON.parse(userJson);
         console.log('[Auth] User loaded from storage:', user);
-      } catch {
-        // Invalid JSON, clear it
+      } catch (e) {
+        console.error('[Auth] Failed to parse user JSON:', e);
         localStorage.removeItem(USER_KEY);
       }
     }
@@ -227,15 +233,30 @@ export class AuthService {
       
       // Validate token by fetching user
       this.fetchUser().subscribe({
-        next: (user) => {
-          console.log('[Auth] Token validated, user:', user);
+        next: (fetchedUser) => {
+          console.log('[Auth] Token validated, user fetched:', fetchedUser);
         },
         error: (err) => {
           console.error('[Auth] Token validation failed:', err);
+          // On error, clear storage to prevent infinite loops
+          this.logout();
         }
       });
     } else {
-      console.log('[Auth] No token found');
+      console.log('[Auth] No token found in storage');
     }
+  }
+  
+  /**
+   * Debug method: Get storage state for troubleshooting
+   */
+  getDebugInfo(): { token: string | null; user: string | null } {
+    if (!this.isBrowser) {
+      return { token: null, user: null };
+    }
+    return {
+      token: localStorage.getItem(TOKEN_KEY),
+      user: localStorage.getItem(USER_KEY),
+    };
   }
 }

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi } from '../../api/dva-api';
 import { UserIdService } from '../../core/user-id.service';
+import { AuthService } from '../../core/auth.service';
 
 // Dashboard page redesigned to match aws-exam-buddy (layout + cards + quick actions).
 //
@@ -70,6 +71,10 @@ export class Dashboard {
   weakConcepts: Array<{ conceptKey: string; wrongCount: number }> = [];
   domainItems: Array<{ label: string; attempts: number; successRate: number | null }> = [];
   showResetModal = false;
+  
+  // Debug
+  private authService = inject(AuthService);
+  debugInfo: { token: string | null; user: string | null } = { token: null, user: null };
 
   constructor(
     private readonly api: DvaApi,
@@ -77,6 +82,15 @@ export class Dashboard {
   ) {
     this.userId = this.userIdService.getOrCreate();
     this.load();
+    this.refreshDebug();
+  }
+  
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+  
+  refreshDebug(): void {
+    this.debugInfo = this.authService.getDebugInfo();
   }
 
   load() {
