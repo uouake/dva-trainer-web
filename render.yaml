@@ -16,10 +16,11 @@ services:
 
   - type: web
     name: dva-trainer-web
-    runtime: static
+    runtime: node
+    plan: starter
     rootDir: frontend
     buildCommand: npm ci --include=dev && npm run build
-    staticPublishPath: ./dist/frontend/browser
+    startCommand: node server.js
 
 databases:
   - name: dva-trainer-db
