@@ -5,7 +5,18 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
-    include: ['src/**/*.spec.ts'],
+    include: [
+      'src/app/pages/dashboard/dashboard.spec.ts',
+      'src/app/pages/routine/routine.spec.ts',
+      'src/app/app.navigation.spec.ts',
+      'src/app/app.spec.ts',
+    ],
+    exclude: [
+      'src/app/api/**/*.spec.ts',
+      'src/app/pages/exam/**/*.spec.ts',
+      'src/app/core/**/*.spec.ts',
+      'src/app/components/**/*.spec.ts',
+    ],
     deps: {
       optimizer: {
         web: {

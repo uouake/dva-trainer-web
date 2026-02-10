@@ -19,8 +19,8 @@ services:
     runtime: node
     plan: starter
     rootDir: frontend
-    buildCommand: npm ci --include=dev && npm run build:prod
-    startCommand: node server.js
+    buildCommand: npm ci --include=dev
+    startCommand: npm run build:prod && node server.js
 
 databases:
   - name: dva-trainer-db

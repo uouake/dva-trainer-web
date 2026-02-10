@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { DvaApi, Question, CreateAttemptDto } from './dva-api';
 import { environment } from '../../environments/environment';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('DvaApi', () => {
   let service: DvaApi;
@@ -23,16 +24,16 @@ describe('DvaApi', () => {
       D: 'A networking service',
     },
     answer: 'A',
+    requiredAnswers: 1,
     conceptKey: 'lambda-basics',
     domainKey: 'development',
     frExplanation: 'Lambda est un service de calcul serverless',
+    frExplanationPedagogique: undefined,
     sourceUrl: 'https://aws.amazon.com/lambda/',
     textHash: 'abc123',
   };
 
   beforeEach(async () => {
-    TestBed.resetTestingModule();
-    
     await TestBed.configureTestingModule({
       providers: [
         DvaApi,

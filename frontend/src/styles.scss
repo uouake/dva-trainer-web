@@ -141,10 +141,15 @@ a:focus-visible {
 
 .btn-ghost {
   background: transparent;
+  color: hsl(var(--foreground));
   border: 1px solid hsl(var(--border));
   border-radius: 0.75rem;
   padding: 0.6rem 0.8rem;
   cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background: hsl(var(--muted));
 }
 
 .exam-mode {
