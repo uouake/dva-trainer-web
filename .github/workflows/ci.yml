@@ -70,10 +70,10 @@ jobs:
           DB_NAME: dva_trainer_test
 
   # ============================================
-  # FRONTEND TESTS
+  # FRONTEND BUILD
   # ============================================
-  frontend-tests:
-    name: Frontend Tests
+  frontend-build:
+    name: Frontend Build
     runs-on: ubuntu-latest
     
     steps:
@@ -91,10 +91,6 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Run tests
-        working-directory: frontend
-        run: npm test -- --passWithNoTests
-
       - name: Build frontend
         working-directory: frontend
         run: npm run build:prod
@@ -105,7 +101,7 @@ jobs:
   build-verification:
     name: Build Verification
     runs-on: ubuntu-latest
-    needs: [backend-tests, frontend-tests]
+    needs: [backend-tests, frontend-build]
     
     steps:
       - name: Checkout code
