@@ -22,23 +22,23 @@ export class UserEntity {
 
   // GitHub OAuth unique identifier
   @Index({ unique: true })
-  @Column({ type: 'text' })
+  @Column({ name: 'github_id', type: 'text' })
   githubId!: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'email', type: 'text', nullable: true })
   email?: string;
 
   // GitHub username (login)
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'username', type: 'text', nullable: true })
   username?: string;
 
   // Display name
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'name', type: 'text', nullable: true })
   name?: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ name: 'avatar_url', type: 'text', nullable: true })
   avatarUrl?: string;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 }

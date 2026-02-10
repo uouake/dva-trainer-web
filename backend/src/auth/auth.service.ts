@@ -43,18 +43,31 @@ export class AuthService {
   // Create users table if it doesn't exist
   private async ensureUsersTable(): Promise<void> {
     try {
-      await this.userRepo.query(`
-        CREATE TABLE IF NOT EXISTS users (
-          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-          github_id TEXT UNIQUE NOT NULL,
-          username TEXT,
-          name TEXT,
-          email TEXT,
-          avatar_url TEXT,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      // Check if table exists first
+      const tableExists = await this.userRepo.query(`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'users'
         );
       `);
-      console.log('✓ Users table ensured');
+      
+      if (!tableExists[0]?.exists) {
+        await this.userRepo.query(`
+          CREATE TABLE users (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            github_id TEXT UNIQUE NOT NULL,
+            username TEXT,
+            name TEXT,
+            email TEXT,
+            avatar_url TEXT,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+        console.log('✓ Users table created');
+      } else {
+        console.log('✓ Users table already exists');
+      }
     } catch (err) {
       console.error('Failed to create users table:', err);
     }
