@@ -64,6 +64,8 @@ export class AuthCallbackPage implements OnInit {
       const token = params['token'];
       const error = params['error'];
 
+      console.log('[Auth Callback] Params received:', Object.keys(params));
+
       if (error) {
         console.error('Erreur d\'authentification:', error);
         this.router.navigate(['/login'], { 
@@ -78,28 +80,31 @@ export class AuthCallbackPage implements OnInit {
         // Stocker le token
         this.authService.setToken(token);
         
-        // Construire l'utilisateur à partir des params si disponibles
+        // Construire l'utilisateur à partir des params
         const user: AuthUser = {
           id: params['id'] || '',
-          username: params['login'] || params['username'] || '',
+          username: params['username'] || '',
           name: params['name'] || undefined,
-          avatarUrl: params['avatar_url'] || params['avatarUrl'] || undefined,
+          avatarUrl: params['avatarUrl'] || undefined,
           email: params['email'] || undefined
         };
         
-        console.log('[Auth Callback] User data:', user);
+        console.log('[Auth Callback] User data:', JSON.stringify(user));
         
+        // Toujours sauvegarder l'utilisateur s'il a un username
         if (user.username) {
           this.authService.setUser(user);
+          console.log('[Auth Callback] User saved successfully');
+        } else {
+          console.warn('[Auth Callback] No username in params!');
         }
 
-        // Attendre un peu pour s'assurer que localStorage est mis à jour
+        // Rediriger vers le dashboard
         setTimeout(() => {
-          console.log('[Auth Callback] Redirecting to dashboard...');
           this.router.navigate(['/dashboard']);
-        }, 100);
+        }, 200);
       } else {
-        // Pas de token, rediriger vers login
+        console.error('[Auth Callback] No token received!');
         this.router.navigate(['/login']);
       }
     });
