@@ -51,19 +51,9 @@ export class AttemptEntity {
   @Column({ type: 'boolean' })
   isCorrect!: boolean;
 
-  // Authentication type for this attempt
-  // - 'anonymous': legacy and new anonymous attempts
-  // - 'github': authenticated via GitHub OAuth
-  @Index()
-  @Column({ name: 'auth_type', type: 'varchar', length: 20, default: 'anonymous' })
-  authType!: AuthType;
-
-  // Optional reference to the users table (for authenticated attempts)
-  // NULL for anonymous attempts (backward compatible)
-  @Index()
-  @Column({ name: 'github_user_id', type: 'text', nullable: true })
-  githubUserId!: string | null;
-
+  // TODO: Add auth columns after manual migration
+  // authType and githubUserId columns need to be added to DB manually first
+  
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 }
