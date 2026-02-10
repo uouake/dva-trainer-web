@@ -22,6 +22,7 @@
     "db:migration:run": "typeorm-ts-node-commonjs -d src/infrastructure/db/data-source.ts migration:run",
     "db:migration:revert": "typeorm-ts-node-commonjs -d src/infrastructure/db/data-source.ts migration:revert",
     "db:schema": "ts-node src/infrastructure/db/scripts/create-schema.ts",
+    "db:create-users": "ts-node src/infrastructure/db/create-users-table.ts",
     "db:seed": "ts-node src/infrastructure/db/seed/seed-questions.ts",
     "questions:enrich": "ts-node src/scripts/enrich-question-bank.ts"
   },
