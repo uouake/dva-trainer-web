@@ -1,7 +1,22 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Routine } from './routine';
+import { of } from 'rxjs';
+
+// Mocks
+const mockUserIdService = {
+  getOrCreate: vi.fn().mockReturnValue('test-user-id')
+};
+
+const mockDvaApi = {
+  startDailySession: vi.fn().mockReturnValue(of({ items: [] })),
+  createAttempt: vi.fn().mockReturnValue(of({ isCorrect: true }))
+};
 
 describe('Routine Component - Basic Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('should create Routine class', () => {
     expect(Routine).toBeDefined();
     
@@ -16,19 +31,18 @@ describe('Routine Component - Basic Tests', () => {
   });
 
   it('should have phase property', () => {
-    // Vérifier que Routine a les propriétés attendues
-    const routine = new Routine(null as any, null as any);
+    const routine = new Routine(mockDvaApi as any, mockUserIdService as any);
     expect(routine.phase).toBeDefined();
     expect(routine.phase).toBe('intro');
   });
 
   it('should have startSession method', () => {
-    const routine = new Routine(null as any, null as any);
+    const routine = new Routine(mockDvaApi as any, mockUserIdService as any);
     expect(typeof routine.startSession).toBe('function');
   });
 
   it('should have backToIntro method', () => {
-    const routine = new Routine(null as any, null as any);
+    const routine = new Routine(mockDvaApi as any, mockUserIdService as any);
     expect(typeof routine.backToIntro).toBe('function');
     
     // Test de la méthode
@@ -38,7 +52,7 @@ describe('Routine Component - Basic Tests', () => {
   });
 
   it('should calculate progress correctly', () => {
-    const routine = new Routine(null as any, null as any);
+    const routine = new Routine(mockDvaApi as any, mockUserIdService as any);
     
     routine.questions = [{}, {}, {}, {}] as any;
     routine.index = 1;
@@ -47,7 +61,7 @@ describe('Routine Component - Basic Tests', () => {
   });
 
   it('should sort choice keys', () => {
-    const routine = new Routine(null as any, null as any);
+    const routine = new Routine(mockDvaApi as any, mockUserIdService as any);
     
     const question = {
       choices: { C: 'C', A: 'A', B: 'B' }
