@@ -12,6 +12,13 @@ import { AuthService, AuthUser } from '../../core/auth.service';
       <div class="callback-container">
         <div class="spinner"></div>
         <p class="callback-message">Connexion en cours...</p>
+        <!-- Debug info visible -->
+        <div *ngIf="debugInfo" style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.1); border-radius: 8px; font-size: 12px; max-width: 300px; word-break: break-all;">
+          <div><strong>Token:</strong> {{ debugInfo.hasToken ? 'Oui' : 'Non' }}</div>
+          <div><strong>Username:</strong> {{ debugInfo.username || 'Non' }}</div>
+          <div><strong>Name:</strong> {{ debugInfo.name || 'Non' }}</div>
+          <div><strong>ID:</strong> {{ debugInfo.id || 'Non' }}</div>
+        </div>
       </div>
     </div>
   `,
@@ -57,6 +64,8 @@ export class AuthCallbackPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authService = inject(AuthService);
+  
+  debugInfo: { hasToken: boolean; username?: string; name?: string; id?: string } | null = null;
 
   ngOnInit(): void {
     // Récupérer le token depuis les query params
@@ -75,37 +84,49 @@ export class AuthCallbackPage implements OnInit {
       }
 
       if (token) {
-        console.log('[Auth Callback] Token received:', token.substring(0, 20) + '...');
-        
-        // Stocker le token
-        this.authService.setToken(token);
-        
-        // Construire l'utilisateur à partir des params
-        const user: AuthUser = {
-          id: params['id'] || '',
-          username: params['username'] || '',
-          name: params['name'] || undefined,
-          avatarUrl: params['avatarUrl'] || undefined,
-          email: params['email'] || undefined
+        // Afficher les debug info à l'écran
+        this.debugInfo = {
+          hasToken: true,
+          username: params['username'] || 'MANQUANT',
+          name: params['name'] || 'MANQUANT',
+          id: params['id'] || 'MANQUANT'
         };
         
-        console.log('[Auth Callback] User data:', JSON.stringify(user));
+        console.log('[Auth Callback] Token received:', token.substring(0, 20) + '...');
         
-        // Toujours sauvegarder l'utilisateur s'il a un username
-        if (user.username) {
-          this.authService.setUser(user);
-          console.log('[Auth Callback] User saved successfully');
-        } else {
-          console.warn('[Auth Callback] No username in params!');
-        }
-
-        // Rediriger vers le dashboard
+        // Attendre 3 secondes pour que l'utilisateur puisse voir les infos
         setTimeout(() => {
+          // Stocker le token
+          this.authService.setToken(token);
+          
+          // Construire l'utilisateur à partir des params
+          const user: AuthUser = {
+            id: params['id'] || '',
+            username: params['username'] || '',
+            name: params['name'] || undefined,
+            avatarUrl: params['avatarUrl'] || undefined,
+            email: params['email'] || undefined
+          };
+          
+          console.log('[Auth Callback] User data:', JSON.stringify(user));
+          
+          // Toujours sauvegarder l'utilisateur s'il a un username
+          if (user.username) {
+            this.authService.setUser(user);
+            console.log('[Auth Callback] User saved successfully');
+          } else {
+            console.warn('[Auth Callback] No username in params!');
+          }
+
+          // Rediriger vers le dashboard
           this.router.navigate(['/dashboard']);
-        }, 200);
+        }, 3000);
       } else {
+        this.debugInfo = { hasToken: false };
         console.error('[Auth Callback] No token received!');
-        this.router.navigate(['/login']);
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       }
     });
   }
