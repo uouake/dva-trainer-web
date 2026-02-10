@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci --include=dev && npm run build && ls -la dist/
+    buildCommand: npm ci && npm run build && ls -la dist/
     startCommand: NODE_ENV=production npm run start:prod
     envVars:
       - key: PORT
