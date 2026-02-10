@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DvaApi } from '../../api/dva-api';
 import { UserIdService } from '../../core/user-id.service';
+import { getConceptLabel } from '../../core/concept-labels';
 
 // Dashboard page redesigned to match aws-exam-buddy (layout + cards + quick actions).
 //
@@ -166,5 +167,9 @@ export class Dashboard {
         this.error = err?.message ?? String(err);
       },
     });
+  }
+
+  getConceptLabel(conceptKey: string): string {
+    return getConceptLabel(conceptKey);
   }
 }

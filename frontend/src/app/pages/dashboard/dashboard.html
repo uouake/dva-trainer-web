@@ -81,7 +81,7 @@
 
     <ul *ngIf="weakConcepts.length" class="muted" style="margin:0; padding-left:18px">
       <li *ngFor="let w of weakConcepts">
-        <span class="font-mono">{{ w.conceptKey }}</span> — {{ w.wrongCount }} erreur(s)
+        {{ getConceptLabel(w.conceptKey) }} — {{ w.wrongCount }} erreur(s)
       </li>
     </ul>
 
