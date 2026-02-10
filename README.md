@@ -1,6 +1,6 @@
 # dva-trainer-web
 
-[![CI/CD Pipeline](https://github.com/OWNER/dva-trainer-web/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/dva-trainer-web/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/uouake/dva-trainer-web/actions/workflows/ci.yml/badge.svg)](https://github.com/uouake/dva-trainer-web/actions/workflows/ci.yml)
 
 Web-only DVA-C02 trainer.
 
