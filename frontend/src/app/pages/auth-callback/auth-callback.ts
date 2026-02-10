@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, User } from '../../core/auth.service';
+import { AuthService, AuthUser } from '../../core/auth.service';
 
 @Component({
   selector: 'app-auth-callback',
@@ -77,15 +77,15 @@ export class AuthCallbackPage implements OnInit {
         this.authService.setToken(token);
         
         // Construire l'utilisateur à partir des params si disponibles
-        const user: User = {
-          id: parseInt(params['id'] || '0', 10),
-          login: params['login'] || '',
+        const user: AuthUser = {
+          id: params['id'] || '',
+          username: params['login'] || params['username'] || '',
           name: params['name'] || undefined,
-          avatar_url: params['avatar_url'] || undefined,
+          avatarUrl: params['avatar_url'] || params['avatarUrl'] || undefined,
           email: params['email'] || undefined
         };
         
-        if (user.login) {
+        if (user.username) {
           this.authService.setUser(user);
         }
 

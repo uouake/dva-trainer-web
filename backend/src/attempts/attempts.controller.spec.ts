@@ -361,6 +361,8 @@ describe('AttemptsController', () => {
         mode: 'daily' as AttemptMode,
         selectedChoice: 'B',
         isCorrect: true,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       });
 
@@ -394,6 +396,8 @@ describe('AttemptsController', () => {
           mode: 'daily' as AttemptMode,
           selectedChoice: 'A',
           isCorrect: true,
+          authType: 'anonymous',
+          githubUserId: null,
           createdAt: new Date(),
         });
 
@@ -441,6 +445,8 @@ describe('AttemptsController', () => {
         mode: 'daily' as AttemptMode,
         selectedChoice: 'A',
         isCorrect: true,
+        authType: 'anonymous',
+        githubUserId: null,
         createdAt: new Date(),
       });
 

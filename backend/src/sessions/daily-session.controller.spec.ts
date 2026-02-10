@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { DailySessionController } from './daily-session.controller';
 import { QuestionEntity } from '../infrastructure/db/typeorm.entities';
+import { UserEntity } from '../infrastructure/db/user.entity';
 
 describe('DailySessionController', () => {
   let controller: DailySessionController;
@@ -46,6 +48,18 @@ describe('DailySessionController', () => {
         {
           provide: getRepositoryToken(QuestionEntity),
           useValue: mockRepo,
+        },
+        {
+          provide: getRepositoryToken(UserEntity),
+          useValue: {
+            findOne: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            verify: jest.fn(),
+          },
         },
       ],
     }).compile();

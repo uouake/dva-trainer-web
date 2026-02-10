@@ -28,18 +28,20 @@ function parseDatabaseUrl(): { host: string; port: number; username: string; pas
 
 export function makeTypeOrmOptions(): DataSourceOptions {
   const dbUrl = parseDatabaseUrl();
+  const isTest = process.env.NODE_ENV === 'test';
   
   return {
     type: 'postgres',
-    host: dbUrl?.host ?? requireEnv('DB_HOST'),
+    host: dbUrl?.host ?? (isTest ? 'localhost' : requireEnv('DB_HOST')),
     port: dbUrl?.port ?? envInt('DB_PORT', 5432),
-    username: dbUrl?.username ?? requireEnv('DB_USER'),
-    password: dbUrl?.password ?? requireEnv('DB_PASSWORD'),
-    database: dbUrl?.database ?? requireEnv('DB_NAME'),
+    username: dbUrl?.username ?? (isTest ? 'test' : requireEnv('DB_USER')),
+    password: dbUrl?.password ?? (isTest ? 'test' : requireEnv('DB_PASSWORD')),
+    database: dbUrl?.database ?? (isTest ? 'dva_test' : requireEnv('DB_NAME')),
 
     // For MVP we use migrations (recommended) instead of synchronize.
     // - synchronize=true can destroy data when entities change.
-    synchronize: false,
+    // In test mode, we enable synchronize for easier testing
+    synchronize: isTest,
 
     // Entities are the TypeORM representations of our DB tables.
     // They are NOT the same thing as Domain entities.

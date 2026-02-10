@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeService, ThemeMode } from './core/theme.service';
-import { AuthService, User } from './core/auth.service';
+import { AuthService, AuthUser } from './core/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -69,7 +69,7 @@ export class App {
     return this.authService.isAuthenticated();
   }
 
-  getUser(): User | null {
+  getUser(): AuthUser | null {
     return this.authService.getUser();
   }
 
