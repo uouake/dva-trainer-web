@@ -35,7 +35,30 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) {
+    // Ensure users table exists on startup
+    this.ensureUsersTable();
+  }
+
+  // Create users table if it doesn't exist
+  private async ensureUsersTable(): Promise<void> {
+    try {
+      await this.userRepo.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          github_id TEXT UNIQUE NOT NULL,
+          username TEXT,
+          name TEXT,
+          email TEXT,
+          avatar_url TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      console.log('✓ Users table ensured');
+    } catch (err) {
+      console.error('Failed to create users table:', err);
+    }
+  }
 
   // Generate GitHub OAuth URL
   getGitHubAuthUrl(): string {
