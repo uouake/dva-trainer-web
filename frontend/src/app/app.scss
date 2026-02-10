@@ -281,10 +281,11 @@
   }
 
   .sidebar-overlay {
-    display: block;
+    display: none;
   }
 
   .sidebar-open .sidebar-overlay {
+    display: block;
     opacity: 1;
   }
 
