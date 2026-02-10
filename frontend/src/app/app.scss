@@ -309,11 +309,18 @@
 @media (min-width: 721px) {
   .theme-text {
     display: inline;
-    margin-right: 4px;
+    margin-right: 2px;
+    font-size: 11px;
   }
-  
+
   .theme-btn {
-    padding: 8px 12px;
+    padding: 8px 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .theme-toggle {
+    gap: 2px;
   }
 }
 

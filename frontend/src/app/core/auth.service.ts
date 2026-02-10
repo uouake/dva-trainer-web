@@ -35,7 +35,6 @@ const USER_KEY = 'dva.auth.user';
 })
 export class AuthService {
   private readonly apiUrl = environment.apiBaseUrl;
-  private readonly isBrowser: boolean;
   
   private stateSubject = new BehaviorSubject<AuthState>({
     isAuthenticated: false,
@@ -47,10 +46,13 @@ export class AuthService {
 
   constructor(
     private readonly http: HttpClient,
-    @Inject(PLATFORM_ID) platformId: object,
+    @Inject(PLATFORM_ID) private platformId: object,
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
     this.loadStateFromStorage();
+  }
+
+  private get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
   }
 
   /**
@@ -85,11 +87,8 @@ export class AuthService {
    * Store token and update state
    */
   setToken(token: string): void {
-    try {
+    if (this.isBrowser) {
       localStorage.setItem(TOKEN_KEY, token);
-      console.log('[Auth] Token saved to localStorage');
-    } catch (e) {
-      console.error('[Auth] Failed to save token:', e);
     }
     this.stateSubject.next({
       ...this.stateSubject.value,
@@ -102,11 +101,8 @@ export class AuthService {
    * Store user info and update state
    */
   setUser(user: AuthUser): void {
-    try {
+    if (this.isBrowser) {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
-      console.log('[Auth] User saved to localStorage:', user);
-    } catch (e) {
-      console.error('[Auth] Failed to save user:', e);
     }
     this.stateSubject.next({
       ...this.stateSubject.value,
@@ -176,82 +172,31 @@ export class AuthService {
   }
 
   /**
-   * Handle OAuth callback - extract and store token from URL
-   */
-  handleAuthCallback(url: string): boolean {
-    const urlObj = new URL(url);
-    const token = urlObj.searchParams.get('token');
-    const username = urlObj.searchParams.get('username');
-
-    if (token) {
-      this.setToken(token);
-      if (username) {
-        this.setUser({
-          id: '', // Will be fetched from API
-          username: decodeURIComponent(username),
-        });
-      }
-      // Fetch full user info
-      this.fetchUser().subscribe();
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
    * Load authentication state from localStorage
    */
   private loadStateFromStorage(): void {
-    try {
-      const token = localStorage.getItem(TOKEN_KEY);
-      const userJson = localStorage.getItem(USER_KEY);
-      
-      console.log('[Auth] Loading from storage:', { 
-        hasToken: !!token, 
-        hasUser: !!userJson,
-        tokenPreview: token ? token.substring(0, 20) + '...' : null
-      });
-      
-      let user: AuthUser | null = null;
-      if (userJson) {
-        try {
-          user = JSON.parse(userJson);
-          console.log('[Auth] User loaded from storage:', user);
-        } catch (e) {
-          console.error('[Auth] Failed to parse user JSON:', e);
-          localStorage.removeItem(USER_KEY);
-        }
-      }
-
-      if (token) {
-        console.log('[Auth] Token found, setting authenticated state');
-        this.stateSubject.next({
-          isAuthenticated: true,
-          token,
-          user,
-        });
-        
-        // Don't validate on load - just use stored data
-        // This prevents logout on refresh
-      } else {
-        console.log('[Auth] No token found in storage');
-      }
-    } catch (e) {
-      console.error('[Auth] Error loading from storage:', e);
-    }
-  }
-  
-  /**
-   * Debug method: Get storage state for troubleshooting
-   */
-  getDebugInfo(): { token: string | null; user: string | null } {
     if (!this.isBrowser) {
-      return { token: null, user: null };
+      return;
     }
-    return {
-      token: localStorage.getItem(TOKEN_KEY),
-      user: localStorage.getItem(USER_KEY),
-    };
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    const userJson = localStorage.getItem(USER_KEY);
+
+    let user: AuthUser | null = null;
+    if (userJson) {
+      try {
+        user = JSON.parse(userJson);
+      } catch {
+        localStorage.removeItem(USER_KEY);
+      }
+    }
+
+    if (token) {
+      this.stateSubject.next({
+        isAuthenticated: true,
+        token,
+        user,
+      });
+    }
   }
 }

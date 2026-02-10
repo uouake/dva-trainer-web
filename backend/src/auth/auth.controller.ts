@@ -42,9 +42,7 @@ export class AuthController {
     }
 
     const { token, user } = await this.authService.handleGitHubCallback(code);
-    
-    console.log('[Auth] OAuth success, user:', JSON.stringify(user));
-    
+
     // Redirection vers le frontend avec le token et les infos utilisateur
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const params = new URLSearchParams({
@@ -54,11 +52,8 @@ export class AuthController {
       name: user.name || '',
       avatarUrl: user.avatarUrl || '',
     });
-    
-    const redirectUrl = `${frontendUrl}/auth/callback?${params.toString()}`;
-    console.log('[Auth] Redirecting to:', redirectUrl);
-    
-    return res.redirect(redirectUrl);
+
+    return res.redirect(`${frontendUrl}/auth/callback?${params.toString()}`);
   }
 
   // GET /api/auth/me
