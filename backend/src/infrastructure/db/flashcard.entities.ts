@@ -10,7 +10,7 @@ export class FlashcardEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'text', unique: true })
+  @Column({ type: 'text', unique: true, name: 'concept_key' })
   conceptKey!: string;
 
   @Column({ type: 'text' })
@@ -25,7 +25,7 @@ export class FlashcardEntity {
   @Column({ type: 'int', default: 1 })
   difficulty!: number;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;
 }
 
@@ -34,21 +34,21 @@ export class FlashcardProgressEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', name: 'user_id' })
   userId!: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', name: 'flashcard_id' })
   flashcardId!: string;
 
   @Column({ type: 'boolean', default: false })
   known!: boolean;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 0, name: 'review_count' })
   reviewCount!: number;
 
-  @CreateDateColumn({ type: 'timestamptz' })
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt!: Date;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamptz', nullable: true, name: 'last_reviewed_at' })
   lastReviewedAt!: Date | null;
 }
