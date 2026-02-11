@@ -1,5 +1,5 @@
-import { DataSource } from 'typeorm';
 import { AppDataSource } from '../infrastructure/db/data-source';
+import { FlashcardEntity } from '../infrastructure/db/flashcard.entities';
 
 const flashcards = [
   {
@@ -221,7 +221,7 @@ async function seedFlashcards() {
     await AppDataSource.initialize();
     console.log('📊 Database connected');
 
-    const flashcardRepository = AppDataSource.getRepository('Flashcard');
+    const flashcardRepository = AppDataSource.getRepository(FlashcardEntity);
 
     // Check if flashcards already exist
     const count = await flashcardRepository.count();

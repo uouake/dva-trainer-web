@@ -12,6 +12,7 @@ import {
 export { UserEntity } from './user.entity';
 export { AttemptEntity } from './attempt.entity';
 export { ChapterEntity, UserChapterProgressEntity } from './chapter.entities';
+export { FlashcardEntity, FlashcardProgressEntity } from './flashcard.entities';
 
 // Database entity for a question.
 //
