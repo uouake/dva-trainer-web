@@ -21,9 +21,9 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: dva
-          POSTGRES_PASSWORD: dva
-          POSTGRES_DB: dva_trainer_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: dva_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -54,9 +54,9 @@ jobs:
           NODE_ENV: test
           DB_HOST: localhost
           DB_PORT: 5432
-          DB_USER: dva
-          DB_PASSWORD: dva
-          DB_NAME: dva_trainer_test
+          DB_USER: test
+          DB_PASSWORD: test
+          DB_NAME: dva_test
 
       - name: Run unit tests
         working-directory: backend
@@ -65,9 +65,9 @@ jobs:
           NODE_ENV: test
           DB_HOST: localhost
           DB_PORT: 5432
-          DB_USER: dva
-          DB_PASSWORD: dva
-          DB_NAME: dva_trainer_test
+          DB_USER: test
+          DB_PASSWORD: test
+          DB_NAME: dva_test
 
   # ============================================
   # FRONTEND BUILD
