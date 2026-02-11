@@ -9,10 +9,18 @@ import { ChapterEntity } from '../infrastructure/db/chapter.entities';
 async function main() {
   console.log('[Seed] Connecting to database...');
   
-  const dataSource = new DataSource(makeTypeOrmOptions() as any);
+  const opts = makeTypeOrmOptions();
+  
+  // Create DataSource with synchronize to create tables if they don't exist
+  const dataSource = new DataSource({
+    ...opts,
+    synchronize: true,
+    logging: false,
+  } as any);
+  
   await dataSource.initialize();
   
-  console.log('[Seed] Connection established.');
+  console.log('[Seed] Connection established and schema synchronized.');
   
   const chapterRepo = dataSource.getRepository(ChapterEntity);
   
