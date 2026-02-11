@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci --include=dev
-    startCommand: NODE_ENV=production sh -c "npm run build && node dist/main.js"
+    buildCommand: npm ci
+    startCommand: NODE_ENV=production npx ts-node-transpile-only src/main.ts
     envVars:
       - key: PORT
         value: 10000
