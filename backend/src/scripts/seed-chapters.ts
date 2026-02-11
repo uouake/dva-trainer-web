@@ -24,12 +24,23 @@ async function main() {
   
   const chapterRepo = dataSource.getRepository(ChapterEntity);
   
-  // Check if chapters already exist
-  const existingCount = await chapterRepo.count();
-  if (existingCount > 0) {
-    console.log(`[Seed] ${existingCount} chapters already exist. Skipping seed.`);
+  // Check if Season 2 chapters already exist
+  const existingS2Count = await chapterRepo.count({ where: { season: 2 } });
+  const existingS1Count = await chapterRepo.count({ where: { season: 1 } });
+  
+  console.log(`[Seed] Found ${existingS1Count} Season 1 chapters, ${existingS2Count} Season 2 chapters`);
+  
+  if (existingS2Count > 0) {
+    console.log(`[Seed] Season 2 chapters already exist. Skipping seed.`);
     await dataSource.destroy();
     process.exit(0);
+  }
+  
+  // If only S1 exists, we'll add S2
+  if (existingS1Count > 0 && existingS2Count === 0) {
+    console.log('[Seed] Season 1 exists, adding Season 2 chapters...');
+  } else if (existingS1Count === 0) {
+    console.log('[Seed] No chapters found, inserting all chapters...');
   }
   
   console.log('[Seed] Inserting chapters...');
@@ -605,12 +616,19 @@ Yuki est passée d'un festival de lycée à une application nationale. La procha
     },
   ];
   
-  for (const chapter of chapters) {
+  // Filter chapters to insert based on what already exists
+  const chaptersToInsert = chapters.filter(ch => {
+    if (ch.season === 1 && existingS1Count > 0) return false;
+    if (ch.season === 2 && existingS2Count > 0) return false;
+    return true;
+  });
+  
+  for (const chapter of chaptersToInsert) {
     await chapterRepo.save(chapter);
     console.log(`[Seed] Created chapter: ${chapter.title}`);
   }
   
-  console.log(`[Seed] Successfully created ${chapters.length} chapters.`);
+  console.log(`[Seed] Successfully created ${chaptersToInsert.length} chapters.`);
   
   await dataSource.destroy();
   console.log('[Seed] Done.');

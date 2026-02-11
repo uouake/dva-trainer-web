@@ -29,6 +29,7 @@
     "db:seed-flashcards": "ts-node src/scripts/seed-flashcards.ts",
     "db:migrate-flashcards": "ts-node src/scripts/migrate-flashcards.ts",
     "db:migrate-season": "ts-node src/scripts/migrate-season.ts",
+    "db:check-data": "ts-node src/scripts/check-data.ts",
     "questions:enrich": "ts-node src/scripts/enrich-question-bank.ts"
   },
   "dependencies": {
