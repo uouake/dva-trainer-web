@@ -27,6 +27,7 @@
     "db:seed": "ts-node src/infrastructure/db/seed/seed-questions.ts",
     "db:seed-chapters": "ts-node src/scripts/seed-chapters.ts",
     "db:seed-flashcards": "ts-node src/scripts/seed-flashcards.ts",
+    "db:migrate-flashcards": "ts-node src/scripts/migrate-flashcards.ts",
     "questions:enrich": "ts-node src/scripts/enrich-question-bank.ts"
   },
   "dependencies": {
