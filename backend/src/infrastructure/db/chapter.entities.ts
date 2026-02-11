@@ -44,6 +44,11 @@ export class ChapterEntity {
   @Column({ type: 'text', default: 'chapter' }) // 'prologue' | 'chapter' | 'epilogue'
   type!: string;
 
+  // Saison (1 ou 2)
+  @Index()
+  @Column({ type: 'int', default: 1 })
+  season!: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt!: Date;
 }
