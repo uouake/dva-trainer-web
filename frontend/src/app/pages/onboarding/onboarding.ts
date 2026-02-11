@@ -128,4 +128,8 @@ export class OnboardingPage implements OnInit {
   retry(): void {
     this.loadData();
   }
+
+  getCompletedCount(chapters: Chapter[]): number {
+    return chapters.filter(c => c.completed).length;
+  }
 }

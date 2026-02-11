@@ -8,6 +8,7 @@ export default defineConfig({
     include: [
       'src/app/pages/dashboard/dashboard.spec.ts',
       'src/app/pages/routine/routine.spec.ts',
+      'src/app/pages/flashcards/*.spec.ts',
       'src/app/app.navigation.spec.ts',
       'src/app/app.spec.ts',
       'src/app/core/auth.service.spec.ts',

@@ -15,6 +15,7 @@ import { DashboardController } from './dashboard/dashboard.controller';
 import { AuthModule } from './auth/auth.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { OnboardingController } from './onboarding/onboarding.controller';
+import { FlashcardsModule } from './flashcards/flashcards.module';
 
 // Root module.
 //
@@ -37,6 +38,9 @@ import { OnboardingController } from './onboarding/onboarding.controller';
 
     // 4) Onboarding module (histoire manga AWS)
     OnboardingModule,
+
+    // 5) Flashcards module (révision des concepts DVA)
+    FlashcardsModule,
   ],
   controllers: [
     AppController,

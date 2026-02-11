@@ -49,7 +49,7 @@
               </h2>
               <div class="season-meta">
                 <span class="season-progress">
-                  {{ season.chapters.filter(c => c.completed).length }} / {{ season.chapters.length }} chapitres
+                  {{ getCompletedCount(season.chapters) }} / {{ season.chapters.length }} chapitres
                 </span>
                 @if (season.isLocked) {
                   <span class="locked-badge">Verrouillé</span>
