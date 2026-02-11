@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci && npm run build && cp -r dist /tmp/dist
-    startCommand: NODE_ENV=production sh -c "if [ ! -f dist/main.js ]; then cp -r /tmp/dist dist 2>/dev/null || npm run build; fi && node dist/main.js"
+    buildCommand: npm ci
+    startCommand: NODE_ENV=production sh -c "npm run build && ls -la dist/ && node dist/main.js"
     envVars:
       - key: PORT
         value: 10000
