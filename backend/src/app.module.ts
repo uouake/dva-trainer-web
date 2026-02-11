@@ -6,6 +6,7 @@ import { makeTypeOrmOptions } from './infrastructure/db/typeorm.config';
 import { QuestionEntity, UserEntity } from './infrastructure/db/typeorm.entities';
 import { AttemptEntity } from './infrastructure/db/attempt.entity';
 import { ChapterEntity, UserChapterProgressEntity } from './infrastructure/db/chapter.entities';
+import { FlashcardEntity, FlashcardProgressEntity } from './infrastructure/db/flashcard.entities';
 import { HealthController } from './health/health.controller';
 import { QuestionsController } from './questions/questions.controller';
 import { DailySessionController } from './sessions/daily-session.controller';
@@ -31,7 +32,7 @@ import { FlashcardsModule } from './flashcards/flashcards.module';
     }),
 
     // 2) Which entities are available for injection as repositories.
-    TypeOrmModule.forFeature([QuestionEntity, AttemptEntity, UserEntity, ChapterEntity, UserChapterProgressEntity]),
+    TypeOrmModule.forFeature([QuestionEntity, AttemptEntity, UserEntity, ChapterEntity, UserChapterProgressEntity, FlashcardEntity, FlashcardProgressEntity]),
 
     // 3) Authentication module
     AuthModule,
