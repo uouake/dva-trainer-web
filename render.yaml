@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci && npm run build
-    startCommand: NODE_ENV=production node dist/main.js
+    buildCommand: npm ci && npm run build && echo "Build completed" && ls -la dist/
+    startCommand: NODE_ENV=production sh -c "ls dist/main.js && node dist/main.js || echo 'File not found' && find dist -name '*.js' | head -5"
     envVars:
       - key: PORT
         value: 10000
