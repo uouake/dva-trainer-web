@@ -89,7 +89,9 @@ export class FlashcardsService {
       progressPercentage: totalFlashcards > 0 ? Math.round((reviewedFlashcards / totalFlashcards) * 100) : 0,
       streakDays: 0, // TODO: Calculate streak
       lastStudyDate: progressRecords.length > 0 
-        ? progressRecords.sort((a, b) => b.lastReviewedAt.getTime() - a.lastReviewedAt.getTime())[0].lastReviewedAt 
+        ? progressRecords
+            .filter(p => p.lastReviewedAt)
+            .sort((a, b) => b.lastReviewedAt!.getTime() - a.lastReviewedAt!.getTime())[0]?.lastReviewedAt ?? null
         : null,
     };
   }
