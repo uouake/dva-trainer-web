@@ -187,7 +187,7 @@ const flashcards = [
   {
     conceptKey: 'x-ray',
     front: "C'est quoi AWS X-Ray ?",
-    back: "Le Détective du Lycée : quand un problème arrive, il suit la piste de l'élève (requête) partout où elle est passée. 'L'élève est arrivé à l'entrée, puis a attendu 5 min au CDI...'",
+    back: "Le Détective du Lycée : quand un problème arrive, il suit la piste de l'élève (requête) partout où elle est passée. L'élève est arrivé à l'entrée, puis a attendu 5 min au CDI...",
     category: 'Monitoring',
     difficulty: 3,
   },
