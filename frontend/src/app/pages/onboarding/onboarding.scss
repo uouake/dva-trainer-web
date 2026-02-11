@@ -131,12 +131,142 @@
   }
 }
 
+// Seasons Container
+.seasons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+// Season Section
+.season-section {
+  position: relative;
+  background: hsl(var(--card));
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 2px solid hsl(var(--border));
+  transition: all 0.3s ease;
+
+  &.locked {
+    border-color: hsl(var(--muted));
+    background: hsl(var(--muted) / 0.3);
+  }
+}
+
+// Season Header
+.season-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid hsl(var(--border));
+
+  .season-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .season-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .lock-icon {
+      font-size: 1.1rem;
+    }
+
+    .unlock-icon {
+      font-size: 1.1rem;
+      opacity: 0.6;
+    }
+  }
+
+  .season-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .season-progress {
+      font-size: 0.9rem;
+      color: hsl(var(--muted-foreground));
+      font-weight: 500;
+    }
+
+    .locked-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      background: hsl(var(--destructive) / 0.1);
+      color: hsl(var(--destructive));
+      border-radius: 20px;
+    }
+  }
+
+  .season-progress-bar {
+    height: 8px;
+    background: hsl(var(--muted));
+    border-radius: 4px;
+    overflow: hidden;
+
+    .season-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+  }
+}
+
+// Season locked overlay
+.locked-overlay {
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--background) / 0.7);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+
+  .locked-message {
+    text-align: center;
+    padding: 2rem;
+    background: hsl(var(--card));
+    border-radius: 12px;
+    border: 2px solid hsl(var(--destructive) / 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+    .locked-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin: 0;
+      color: hsl(var(--muted-foreground));
+      font-size: 0.95rem;
+      max-width: 280px;
+    }
+  }
+}
+
 // Chapters list
 .chapters-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 2rem;
+
+  &.dimmed {
+    opacity: 0.6;
+  }
 }
 
 // Chapter card
@@ -171,6 +301,30 @@
     .chapter-status .quiz-score {
       background: #ed8936;
       color: white;
+    }
+  }
+
+  &.locked {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background: hsl(var(--muted) / 0.3);
+
+    &:hover {
+      border-color: hsl(var(--border));
+      box-shadow: none;
+      transform: none;
+    }
+
+    .chapter-title {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .chapter-number {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .chapter-icon {
+      opacity: 0.5;
     }
   }
 
@@ -269,6 +423,138 @@
   }
 }
 
+// Seasons
+.seasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.season-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  &.locked {
+    opacity: 0.85;
+    background: #f7fafc;
+    border-color: #cbd5e0;
+  }
+}
+
+.season-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.season-info {
+  flex: 1;
+}
+
+.season-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 0.5rem;
+}
+
+.season-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.season-count {
+  font-size: 0.875rem;
+  color: #718096;
+  white-space: nowrap;
+}
+
+.season-progress-bar {
+  flex: 1;
+  max-width: 200px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.season-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.season-lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #fffaf0;
+  border-radius: 8px;
+  border: 2px solid #ed8936;
+
+  .lock-icon {
+    font-size: 1.5rem;
+  }
+
+  .lock-text {
+    font-size: 0.75rem;
+    color: #c05621;
+    font-weight: 600;
+  }
+}
+
+.locked-message {
+  text-align: center;
+  padding: 2rem;
+  background: #fffaf0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 2px dashed #ed8936;
+
+  p {
+    margin: 0;
+    color: #744210;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+.chapters-list.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.chapter-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f7fafc;
+
+  &:hover {
+    transform: none;
+    border-color: #e2e8f0;
+    box-shadow: none;
+  }
+}
+
+.locked-badge {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
 // Responsive
 @media (max-width: 600px) {
   .onboarding-page {
@@ -285,6 +571,16 @@
     .manga-subtitle {
       font-size: 0.95rem;
     }
+  }
+
+  .season-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .season-lock {
+    align-self: flex-end;
   }
 
   .chapter-card {

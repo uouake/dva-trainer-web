@@ -1,7 +1,7 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { OnboardingService, Chapter, UserProgress } from './onboarding.service';
+import { OnboardingService, Chapter, UserProgress, Season } from './onboarding.service';
 
 @Component({
   selector: 'app-onboarding',
@@ -19,6 +19,51 @@ export class OnboardingPage implements OnInit {
   progress = signal<UserProgress | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+
+  // Computed pour les saisons
+  seasons = computed<Season[]>(() => {
+    const allChapters = this.chapters();
+    const seasonMap = new Map<number, Chapter[]>();
+
+    // Grouper les chapitres par saison
+    allChapters.forEach(chapter => {
+      const seasonNum = chapter.season || 1;
+      if (!seasonMap.has(seasonNum)) {
+        seasonMap.set(seasonNum, []);
+      }
+      seasonMap.get(seasonNum)!.push(chapter);
+    });
+
+    // Créer les objets Season
+    const sortedSeasons = Array.from(seasonMap.entries())
+      .sort(([a], [b]) => a - b)
+      .map(([number, chapters]) => {
+        const completedCount = chapters.filter(c => c.completed).length;
+        const progressPercentage = chapters.length > 0
+          ? Math.round((completedCount / chapters.length) * 100)
+          : 0;
+
+        // Saison verrouillée si ce n'est pas la saison 1 et que la saison précédente n'est pas complète
+        let isLocked = false;
+        if (number > 1) {
+          const previousSeason = seasonMap.get(number - 1);
+          if (previousSeason) {
+            const prevCompleted = previousSeason.filter(c => c.completed).length;
+            isLocked = prevCompleted < previousSeason.length;
+          }
+        }
+
+        return {
+          number,
+          title: number === 1 ? 'Saison 1 : Le Festival du Lycée' : 'Saison 2 : L\'Échelle Nationale',
+          chapters: chapters.sort((a, b) => a.number - b.number),
+          isLocked,
+          progressPercentage,
+        };
+      });
+
+    return sortedSeasons;
+  });
 
   ngOnInit(): void {
     this.loadData();

@@ -1,0 +1,233 @@
+<div class="flashcards-page">
+  <header class="flashcards-header">
+    <h1 class="page-title">🎴 Flashcards AWS</h1>
+    <p class="page-subtitle">Teste tes connaissances avec des cartes mémoire interactives</p>
+  </header>
+
+  <!-- Loading State -->
+  @if (state() === 'loading') {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Chargement des flashcards...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (state() === 'error') {
+    <div class="error-container">
+      <span class="error-icon">⚠️</span>
+      <p class="error-message">{{ errorMessage() }}</p>
+      <button class="btn-primary" (click)="retryLoading()">Réessayer</button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (state() === 'empty') {
+    <div class="empty-container">
+      <span class="empty-icon">📭</span>
+      <h2>Aucune flashcard disponible</h2>
+      <p>Il n'y a pas encore de flashcards dans le système. Reviens plus tard !</p>
+      <a routerLink="/dashboard" class="btn-secondary">Retour au Dashboard</a>
+    </div>
+  }
+
+  <!-- Study Mode -->
+  @if (state() === 'study' && currentFlashcard()) {
+    <div class="study-container">
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-info">
+          <span class="progress-label">Progression</span>
+          <span class="progress-value">{{ progressText() }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
+        </div>
+      </div>
+
+      <!-- Stats Summary -->
+      @if (stats()) {
+        <div class="stats-summary">
+          <div class="stat-item">
+            <span class="stat-value">{{ stats()?.knownFlashcards || 0 }}</span>
+            <span class="stat-label">Connues</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ stats()?.toReviewFlashcards || 0 }}</span>
+            <span class="stat-label">À réviser</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ stats()?.streakDays || 0 }}</span>
+            <span class="stat-label">Jours de suite</span>
+          </div>
+        </div>
+      }
+
+      <!-- Flashcard -->
+      <div 
+        class="flashcard-container"
+        [class.flipped]="flipState() === 'back'"
+        (click)="flipCard()"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="flipState() === 'front' ? 'Carte recto, cliquez pour retourner' : 'Carte verso, cliquez pour retourner'"
+        (keydown.enter)="flipCard()"
+        (keydown.space)="flipCard(); $event.preventDefault()"
+      >
+        <div class="flashcard-inner">
+          <!-- Front -->
+          <div class="flashcard-face flashcard-front">
+            <div class="card-header">
+              <span class="category-badge">{{ currentFlashcard()?.category }}</span>
+              <span class="difficulty-badge" [class]="getDifficultyColor(currentFlashcard()?.difficulty || '')">
+                {{ getDifficultyLabel(currentFlashcard()?.difficulty || '') }}
+              </span>
+            </div>
+            <div class="card-content">
+              <h3 class="question">{{ currentFlashcard()?.question }}</h3>
+            </div>
+            <div class="card-footer">
+              <span class="flip-hint">
+                <span class="flip-icon">🔄</span>
+                Cliquez pour retourner
+              </span>
+            </div>
+          </div>
+
+          <!-- Back -->
+          <div class="flashcard-face flashcard-back">
+            <div class="card-header">
+              <span class="category-badge">{{ currentFlashcard()?.category }}</span>
+            </div>
+            <div class="card-content">
+              <h3 class="answer-label">Réponse</h3>
+              <p class="answer">{{ currentFlashcard()?.answer }}</p>
+              @if (currentFlashcard()?.tags && currentFlashcard()?.tags!.length > 0) {
+                <div class="tags-container">
+                  @for (tag of currentFlashcard()?.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                  }
+                </div>
+              }
+            </div>
+            <div class="card-footer">
+              <span class="flip-hint">
+                <span class="flip-icon">🔄</span>
+                Cliquez pour revenir
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Controls -->
+      <div class="controls-container">
+        @if (flipState() === 'front') {
+          <button 
+            class="btn-flip" 
+            (click)="flipCard(); $event.stopPropagation()"
+            aria-label="Retourner la carte"
+          >
+            <span class="btn-icon">👁️</span>
+            <span class="btn-text">Voir la réponse</span>
+          </button>
+        } @else {
+          <div class="answer-controls">
+            <button 
+              class="btn-review"
+              (click)="markForReview(); $event.stopPropagation()"
+              aria-label="Marquer pour révision"
+            >
+              <span class="btn-icon">🔄</span>
+              <span class="btn-text">À réviser</span>
+            </button>
+            <button 
+              class="btn-known"
+              (click)="markAsKnown(); $event.stopPropagation()"
+              aria-label="Marquer comme connue"
+            >
+              <span class="btn-icon">✓</span>
+              <span class="btn-text">Je connais</span>
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Keyboard Shortcuts Hint -->
+      <div class="shortcuts-hint">
+        <p>
+          <kbd>Espace</kbd> ou <kbd>Entrée</kbd> pour retourner · 
+          <kbd>←</kbd> <kbd>→</kbd> pour naviguer
+        </p>
+      </div>
+    </div>
+  }
+
+  <!-- Summary State -->
+  @if (state() === 'summary') {
+    <div class="summary-container">
+      <div class="summary-card">
+        <div class="summary-header">
+          <span class="summary-icon">🎉</span>
+          <h2>Session terminée !</h2>
+        </div>
+
+        <div class="summary-stats">
+          <div class="result-circle">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path class="circle-bg"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+              <path class="circle"
+                [attr.stroke-dasharray]="getSuccessRate() + ', 100'"
+                d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+              />
+            </svg>
+            <div class="percentage">{{ getSuccessRate() }}%</div>
+          </div>
+
+          <div class="results-details">
+            <div class="result-item success">
+              <span class="result-icon">✓</span>
+              <div class="result-info">
+                <span class="result-value">{{ sessionResults().known }}</span>
+                <span class="result-label">Cartes connues</span>
+              </div>
+            </div>
+            <div class="result-item review">
+              <span class="result-icon">🔄</span>
+              <div class="result-info">
+                <span class="result-value">{{ sessionResults().review }}</span>
+                <span class="result-label">À réviser</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-message">
+          @if (getSuccessRate() >= 80) {
+            <p>🌟 Excellent ! Tu maîtrises bien ces concepts AWS !</p>
+          } @else if (getSuccessRate() >= 50) {
+            <p>👍 Bien joué ! Continue à réviser pour progresser.</p>
+          } @else {
+            <p>💪 Continue l'entraînement ! La répétition est la clé.</p>
+          }
+        </div>
+
+        <div class="summary-actions">
+          <button class="btn-primary" (click)="startNewSession()">
+            <span class="btn-icon">🔄</span>
+            Nouvelle session
+          </button>
+          <a routerLink="/dashboard" class="btn-secondary">
+            Retour au Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>

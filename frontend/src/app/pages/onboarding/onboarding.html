@@ -23,7 +23,7 @@
     @if (progress()) {
       <div class="progress-section">
         <div class="progress-info">
-          <span class="progress-label">Progression</span>
+          <span class="progress-label">Progression Globale</span>
           <span class="progress-value">{{ progress()?.completedChapters }} / {{ progress()?.totalChapters }} chapitres</span>
         </div>
         <div class="progress-bar">
@@ -32,30 +32,80 @@
       </div>
     }
 
-    <!-- Liste des chapitres -->
-    <div class="chapters-list">
-      @for (chapter of chapters(); track chapter.id) {
-        <div 
-          class="chapter-card"
-          [class.completed]="chapter.completed"
-          [class.has-quiz-score]="chapter.quizScore !== null"
-          (click)="navigateToChapter(chapter.id)"
-        >
-          <div class="chapter-icon">{{ getChapterIcon(chapter.type) }}</div>
-          <div class="chapter-content">
-            <div class="chapter-number">{{ getChapterNumberLabel(chapter) }}</div>
-            <h3 class="chapter-title">{{ chapter.title }}</h3>
+    <!-- Saisons -->
+    <div class="seasons-container">
+      @for (season of seasons(); track season.number) {
+        <div class="season-section" [class.locked]="season.isLocked">
+          <!-- Season Header -->
+          <div class="season-header">
+            <div class="season-info">
+              <h2 class="season-title">
+                @if (season.isLocked) {
+                  <span class="lock-icon">🔒</span>
+                } @else {
+                  <span class="unlock-icon">🔓</span>
+                }
+                {{ season.title }}
+              </h2>
+              <div class="season-meta">
+                <span class="season-progress">
+                  {{ season.chapters.filter(c => c.completed).length }} / {{ season.chapters.length }} chapitres
+                </span>
+                @if (season.isLocked) {
+                  <span class="locked-badge">Verrouillé</span>
+                }
+              </div>
+            </div>
+            <div class="season-progress-bar">
+              <div class="season-progress-fill" [style.width.%]="season.progressPercentage"></div>
+            </div>
           </div>
-          <div class="chapter-status">
-            @if (chapter.quizScore !== null) {
-              <span class="quiz-score">{{ chapter.quizScore }}%</span>
-            }
-            @if (chapter.completed) {
-              <span class="completed-badge">✓</span>
-            } @else {
-              <span class="pending-badge">→</span>
+
+          <!-- Chapitres de la saison -->
+          <div class="chapters-list" [class.dimmed]="season.isLocked">
+            @for (chapter of season.chapters; track chapter.id) {
+              <div 
+                class="chapter-card"
+                [class.completed]="chapter.completed"
+                [class.has-quiz-score]="chapter.quizScore !== null"
+                [class.locked]="season.isLocked"
+                (click)="!season.isLocked && navigateToChapter(chapter.id)"
+                role="button"
+                [attr.tabindex]="season.isLocked ? -1 : 0"
+                [attr.aria-label]="season.isLocked ? 'Chapitre verrouillé - Complétez la saison précédente' : getChapterNumberLabel(chapter) + ': ' + chapter.title"
+                (keydown.enter)="!season.isLocked && navigateToChapter(chapter.id)"
+              >
+                <div class="chapter-icon">{{ getChapterIcon(chapter.type) }}</div>
+                <div class="chapter-content">
+                  <div class="chapter-number">{{ getChapterNumberLabel(chapter) }}</div>
+                  <h3 class="chapter-title">{{ chapter.title }}</h3>
+                </div>
+                <div class="chapter-status">
+                  @if (chapter.quizScore !== null) {
+                    <span class="quiz-score">{{ chapter.quizScore }}%</span>
+                  }
+                  @if (chapter.completed) {
+                    <span class="completed-badge">✓</span>
+                  } @else {
+                    @if (season.isLocked) {
+                      <span class="locked-indicator">🔒</span>
+                    } @else {
+                      <span class="pending-badge">→</span>
+                    }
+                  }
+                </div>
+              </div>
             }
           </div>
+
+          @if (season.isLocked) {
+            <div class="locked-overlay">
+              <div class="locked-message">
+                <span class="locked-icon">🔐</span>
+                <p>Complétez tous les chapitres de la Saison {{ season.number - 1 }} pour débloquer</p>
+              </div>
+            </div>
+          }
         </div>
       }
     </div>

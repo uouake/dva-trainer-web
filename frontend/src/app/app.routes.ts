@@ -6,12 +6,13 @@ import { Exam } from './pages/exam/exam';
 import { GlossaryPage } from './pages/glossary/glossary';
 import { LoginPage } from './pages/login/login';
 import { AuthCallbackPage } from './pages/auth-callback/auth-callback';
-import { 
-  OnboardingPage, 
-  ChapterReaderPage, 
-  QuizPage, 
-  ArchitecturePage 
+import {
+  OnboardingPage,
+  ChapterReaderPage,
+  QuizPage,
+  ArchitecturePage
 } from './pages/onboarding';
+import { FlashcardsPage } from './pages/flashcards/flashcards';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
@@ -28,4 +29,7 @@ export const routes: Routes = [
   { path: 'onboarding/chapter/:id', component: ChapterReaderPage, canActivate: [authGuard] },
   { path: 'onboarding/quiz/:chapterId', component: QuizPage, canActivate: [authGuard] },
   { path: 'onboarding/architecture', component: ArchitecturePage, canActivate: [authGuard] },
+
+  // Flashcards (protégées par authGuard)
+  { path: 'flashcards', component: FlashcardsPage, canActivate: [authGuard] },
 ];

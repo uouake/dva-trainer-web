@@ -8,8 +8,17 @@ export interface Chapter {
   number: number;
   title: string;
   type: string;
+  season: number;
   completed: boolean;
   quizScore: number | null;
+}
+
+export interface Season {
+  number: number;
+  title: string;
+  chapters: Chapter[];
+  isLocked: boolean;
+  progressPercentage: number;
 }
 
 export interface ChapterDetail extends Chapter {
@@ -97,5 +106,20 @@ export class OnboardingService {
    */
   getUserProgress(): Observable<UserProgress> {
     return this.http.get<UserProgress>(`${this.apiUrl}/api/onboarding/progress`);
+  }
+
+  /**
+   * Récupère les saisons avec leurs chapitres groupés
+   */
+  getSeasons(): Observable<Season[]> {
+    return this.http.get<Season[]>(`${this.apiUrl}/api/onboarding/seasons`);
+  }
+
+  /**
+   * Récupère la saison actuelle de l'utilisateur
+   * (la première saison non complétée ou la dernière si tout est complété)
+   */
+  getCurrentSeason(): Observable<{ season: number; isCompleted: boolean }> {
+    return this.http.get<{ season: number; isCompleted: boolean }>(`${this.apiUrl}/api/onboarding/current-season`);
   }
 }
