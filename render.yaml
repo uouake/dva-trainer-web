@@ -4,8 +4,8 @@ services:
     runtime: node
     plan: starter
     rootDir: backend
-    buildCommand: npm ci
-    startCommand: NODE_ENV=production npx ts-node src/main.ts
+    buildCommand: npm ci && npm run build
+    startCommand: NODE_ENV=production node dist/main.js
     envVars:
       - key: PORT
         value: 10000
