@@ -11,6 +11,7 @@ import {
 // Re-export all entities for convenience
 export { UserEntity } from './user.entity';
 export { AttemptEntity } from './attempt.entity';
+export { ChapterEntity, UserChapterProgressEntity } from './chapter.entities';
 
 // Database entity for a question.
 //

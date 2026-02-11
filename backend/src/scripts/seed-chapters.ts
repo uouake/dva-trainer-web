@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { makeTypeOrmOptions } from '../typeorm.config';
-import { ChapterEntity } from '../typeorm.entities';
+import { makeTypeOrmOptions } from '../infrastructure/db/typeorm.config';
+import { ChapterEntity } from '../infrastructure/db/chapter.entities';
 
 // Seed script: inserts the manga story chapters into Postgres.
 // Run with: npm run seed-chapters
