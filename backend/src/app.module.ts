@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { makeTypeOrmOptions } from './infrastructure/db/typeorm.config';
 import { QuestionEntity, UserEntity } from './infrastructure/db/typeorm.entities';
 import { AttemptEntity } from './infrastructure/db/attempt.entity';
+import { ChapterEntity, UserChapterProgressEntity } from './infrastructure/db/chapter.entities';
 import { HealthController } from './health/health.controller';
 import { QuestionsController } from './questions/questions.controller';
 import { DailySessionController } from './sessions/daily-session.controller';
@@ -12,6 +13,8 @@ import { ExamController } from './exams/exam.controller';
 import { AttemptsController } from './attempts/attempts.controller';
 import { DashboardController } from './dashboard/dashboard.controller';
 import { AuthModule } from './auth/auth.module';
+import { OnboardingModule } from './onboarding/onboarding.module';
+import { OnboardingController } from './onboarding/onboarding.controller';
 
 // Root module.
 //
@@ -27,10 +30,13 @@ import { AuthModule } from './auth/auth.module';
     }),
 
     // 2) Which entities are available for injection as repositories.
-    TypeOrmModule.forFeature([QuestionEntity, AttemptEntity, UserEntity]),
+    TypeOrmModule.forFeature([QuestionEntity, AttemptEntity, UserEntity, ChapterEntity, UserChapterProgressEntity]),
 
     // 3) Authentication module
     AuthModule,
+
+    // 4) Onboarding module (histoire manga AWS)
+    OnboardingModule,
   ],
   controllers: [
     AppController,
@@ -40,6 +46,7 @@ import { AuthModule } from './auth/auth.module';
     ExamController,
     AttemptsController,
     DashboardController,
+    OnboardingController,
   ],
   providers: [AppService],
 })

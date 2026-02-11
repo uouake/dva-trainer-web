@@ -1,0 +1,114 @@
+<div class="architecture-page">
+  <header class="architecture-header">
+    <a class="back-link" routerLink="/onboarding">
+      <span>←</span> Retour à l'histoire
+    </a>
+    <h1 class="architecture-title">🏗️ Architecture de l'App</h1>
+    <p class="architecture-subtitle">Voici comment tous les services AWS se connectent</p>
+  </header>
+
+  <!-- Schéma d'architecture -->
+  <div class="architecture-diagram">
+    <div class="layer user-layer">
+      <div class="box user-box">
+        <span class="icon">👤</span>
+        <span class="label">UTILISATEUR</span>
+        <span class="sublabel">Élève avec son téléphone</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer gateway-layer">
+      <div class="box gateway-box">
+        <span class="icon">🚪</span>
+        <span class="label">API GATEWAY</span>
+        <span class="sublabel">Porte d'Entrée avec Gardien</span>
+        <span class="sublabel">Vérifie les Badges (IAM)</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer compute-layer">
+      <div class="box lambda-box">
+        <span class="icon">🤖</span>
+        <span class="label">AWS LAMBDA</span>
+        <span class="sublabel">Robot Cuisinier</span>
+        <span class="sublabel">Armée de robots (Auto-Scaling)</span>
+      </div>
+    </div>
+
+    <div class="branches">
+      <div class="branch-row">
+        <div class="branch-box secrets-box">
+          <span class="icon">🔐</span>
+          <span class="label">SECRETS MANAGER</span>
+          <span class="sublabel">Coffre-Fort Numérique</span>
+        </div>
+        <div class="branch-box s3-box">
+          <span class="icon">📦</span>
+          <span class="label">S3</span>
+          <span class="sublabel">Casier Infini</span>
+        </div>
+      </div>
+
+      <div class="arrow-center">↓</div>
+
+      <div class="branch-box dynamodb-box">
+        <span class="icon">🗄️</span>
+        <span class="label">DYNAMODB</span>
+        <span class="sublabel">Fiches Élèves Magiques</span>
+      </div>
+
+      <div class="arrow-center">↓</div>
+
+      <div class="branch-row">
+        <div class="branch-box sqs-box">
+          <span class="icon">📬</span>
+          <span class="label">SQS</span>
+          <span class="sublabel">Boîte aux Lettres</span>
+        </div>
+        <div class="branch-box sns-box">
+          <span class="icon">📢</span>
+          <span class="label">SNS</span>
+          <span class="sublabel">Haut-Parleur</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="layer monitoring-layer">
+      <div class="box cloudwatch-box">
+        <span class="icon">📊</span>
+        <span class="label">CLOUDWATCH</span>
+        <span class="sublabel">Tableau de Bord du Proviseur</span>
+        <ul class="feature-list">
+          <li>Surveille les performances</li>
+          <li>Déclenche l'armée de robots si besoin</li>
+          <li>Détecte les attaques (DDOS)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau des concepts -->
+  <div class="concepts-section">
+    <h2>📋 Mapping Concepts AWS</h2>
+    <div class="concepts-table">
+      <div class="table-header">
+        <span>Chapitre</span>
+        <span>Concept AWS</span>
+        <span>Nom dans l'histoire</span>
+      </div>
+      @for (concept of concepts; track $index) {
+        <div class="table-row">
+          <span class="chapter-cell">{{ concept.chapter }}</span>
+          <span class="aws-cell">{{ concept.awsName }}</span>
+          <span class="story-cell">{{ concept.storyName }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

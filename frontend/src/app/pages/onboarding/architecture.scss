@@ -1,0 +1,326 @@
+.architecture-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+// Header
+.architecture-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #4a5568;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+    }
+  }
+
+  .architecture-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2d3748;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .architecture-subtitle {
+    font-size: 1rem;
+    color: #718096;
+    margin: 0;
+  }
+}
+
+// Architecture diagram
+.architecture-diagram {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.layer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 300px;
+
+  .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+  }
+
+  .sublabel {
+    font-size: 0.9rem;
+    color: #718096;
+  }
+}
+
+.user-box {
+  background: linear-gradient(135deg, #e6fffa 0%, #ebf8ff 100%);
+  border: 2px solid #38b2ac;
+}
+
+.gateway-box {
+  background: linear-gradient(135deg, #fef5e7 0%, #fdf2e9 100%);
+  border: 2px solid #ed8936;
+}
+
+.lambda-box {
+  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+  border: 2px solid #ff6b6b;
+}
+
+.cloudwatch-box {
+  background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+  border: 2px solid #4299e1;
+
+  .feature-list {
+    text-align: left;
+    margin: 0.75rem 0 0 0;
+    padding-left: 1.25rem;
+    font-size: 0.85rem;
+    color: #4a5568;
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+.arrow {
+  font-size: 1.5rem;
+  color: #a0aec0;
+  padding: 0.5rem 0;
+}
+
+.arrow-center {
+  font-size: 1.2rem;
+  color: #a0aec0;
+  padding: 0.25rem 0;
+}
+
+// Branches section
+.branches {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.branch-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.branch-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 10px;
+  text-align: center;
+  flex: 1;
+  max-width: 200px;
+
+  .icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+  }
+
+  .sublabel {
+    font-size: 0.85rem;
+    color: #718096;
+  }
+}
+
+.secrets-box {
+  background: #faf5ff;
+  border: 2px solid #9f7aea;
+}
+
+.s3-box {
+  background: #fffaf0;
+  border: 2px solid #ed8936;
+}
+
+.dynamodb-box {
+  background: #f0fff4;
+  border: 2px solid #48bb78;
+  width: 100%;
+  max-width: 300px;
+}
+
+.sqs-box {
+  background: #ebf8ff;
+  border: 2px solid #4299e1;
+}
+
+.sns-box {
+  background: #fff5f5;
+  border: 2px solid #fc8181;
+}
+
+// Concepts section
+.concepts-section {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+  }
+}
+
+.concepts-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #edf2f7;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #4a5568;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 80px 1fr 1fr;
+    font-size: 0.75rem;
+  }
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.95rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 80px 1fr 1fr;
+    font-size: 0.85rem;
+  }
+
+  .chapter-cell {
+    font-weight: 600;
+    color: #ff6b6b;
+  }
+
+  .aws-cell {
+    font-weight: 600;
+    color: #2d3748;
+  }
+
+  .story-cell {
+    color: #718096;
+    font-style: italic;
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .architecture-page {
+    padding: 0.5rem;
+  }
+
+  .architecture-header {
+    .architecture-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .architecture-diagram {
+    padding: 1rem;
+  }
+
+  .box {
+    padding: 1rem;
+
+    .icon {
+      font-size: 2rem;
+    }
+
+    .label {
+      font-size: 1rem;
+    }
+  }
+
+  .branch-box {
+    padding: 1rem;
+    max-width: 100%;
+    width: 100%;
+
+    .icon {
+      font-size: 1.75rem;
+    }
+  }
+
+  .concepts-section {
+    padding: 1rem;
+  }
+}

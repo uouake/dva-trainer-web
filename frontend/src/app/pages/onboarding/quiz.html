@@ -1,0 +1,162 @@
+<div class="quiz-page">
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Chargement du quiz...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <p class="error-message">{{ error() }}</p>
+      <button class="back-btn" (click)="goToList()">Retour à la liste</button>
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <!-- Header -->
+    <header class="quiz-header">
+      <button class="back-btn" (click)="goToChapter()">
+        <span>←</span> Retour au chapitre
+      </button>
+      <h1 class="quiz-title">📝 Quiz</h1>
+      <p class="quiz-subtitle">{{ chapterTitle() }}</p>
+    </header>
+
+    @if (!showResults()) {
+      <!-- Progress bar -->
+      <div class="quiz-progress">
+        <div class="progress-info">
+          <span>Question {{ currentQuestionIndex() + 1 }} sur {{ questions().length }}</span>
+          <span>{{ progressPercentage() | number:'1.0-0' }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercentage()"></div>
+        </div>
+      </div>
+
+      <!-- Question dots -->
+      <div class="question-dots">
+        @for (q of questions(); track $index) {
+          <button 
+            class="dot"
+            [class.current]="$index === currentQuestionIndex()"
+            [class.answered]="q.userAnswer !== null"
+            (click)="goToQuestion($index)"
+          >
+            {{ $index + 1 }}
+          </button>
+        }
+      </div>
+
+      <!-- Question card -->
+      @if (currentQuestion(); as question) {
+        <div class="question-card">
+          <div class="question-number">Question {{ currentQuestionIndex() + 1 }}</div>
+          <h2 class="question-text">{{ question.stem }}</h2>
+
+          <div class="choices-list">
+            @for (choice of question.choices | keyvalue; track choice.key) {
+              <button 
+                class="choice-btn"
+                [class.selected]="question.userAnswer === choice.key"
+                (click)="selectAnswer(choice.key)"
+              >
+                <span class="choice-letter">{{ choice.key }}</span>
+                <span class="choice-text">{{ choice.value }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Navigation -->
+      <div class="quiz-navigation">
+        <button 
+          class="nav-btn"
+          [disabled]="isFirstQuestion()"
+          (click)="goToPrevious()"
+        >
+          ← Précédent
+        </button>
+
+        @if (isLastQuestion()) {
+          <button 
+            class="submit-btn"
+            [disabled]="!allAnswered() || submitting()"
+            (click)="submitQuiz()"
+          >
+            @if (submitting()) {
+              <span class="spinner"></span>
+            } @else {
+              <span>Terminer le quiz</span>
+            }
+          </button>
+        } @else {
+          <button 
+            class="nav-btn next"
+            [disabled]="!hasAnsweredCurrent()"
+            (click)="goToNext()"
+          >
+            Suivant →
+          </button>
+        }
+      </div>
+    }
+
+    @if (showResults()) {
+      <!-- Results -->
+      <div class="results-container">
+        <div class="score-card" [style.background-color]="getScoreColor()">
+          <div class="score-value">{{ score() }}%</div>
+          <div class="score-label">Score</div>
+        </div>
+
+        <p class="score-message">{{ getScoreMessage() }}</p>
+
+        <!-- Review answers -->
+        <div class="review-section">
+          <h3>Récapitulatif des réponses</h3>
+          
+          @for (q of questions(); track q.id; let i = $index) {
+            <div class="review-item" [class.correct]="isCorrectAnswer(q)" [class.incorrect]="!isCorrectAnswer(q)">
+              <div class="review-header">
+                <span class="review-number">Q{{ i + 1 }}</span>
+                <span class="review-status">
+                  @if (isCorrectAnswer(q)) {
+                    ✓ Bonne réponse
+                  } @else {
+                    ✗ Mauvaise réponse
+                  }
+                </span>
+              </div>
+              <p class="review-question">{{ q.stem }}</p>
+              <div class="review-answers">
+                <div class="your-answer" [class.correct]="isCorrectAnswer(q)" [class.incorrect]="!isCorrectAnswer(q)">
+                  <span class="label">Ta réponse:</span>
+                  <span class="answer">{{ q.userAnswer }} - {{ q.choices[q.userAnswer || ''] }}</span>
+                </div>
+                @if (!isCorrectAnswer(q)) {
+                  <div class="correct-answer">
+                    <span class="label">Bonne réponse:</span>
+                    <span class="answer">{{ q.answer }} - {{ q.choices[q.answer] }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Action buttons -->
+        <div class="results-actions">
+          <button class="action-btn retry" (click)="retryQuiz()">
+            🔄 Réessayer
+          </button>
+          <button class="action-btn back" (click)="goToList()">
+            📚 Retour aux chapitres
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

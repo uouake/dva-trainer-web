@@ -1,0 +1,92 @@
+<div class="chapter-reader-page">
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Chargement du chapitre...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <p class="error-message">{{ error() }}</p>
+      <button class="back-btn" (click)="goToList()">Retour à la liste</button>
+    </div>
+  }
+
+  @if (!loading() && !error() && chapter()) {
+    <!-- Navigation supérieure -->
+    <nav class="chapter-nav-top">
+      <button class="nav-btn back" (click)="goToList()">
+        <span>←</span> Retour
+      </button>
+      <div class="chapter-info">
+        <span class="chapter-number">{{ getChapterNumberLabel() }}</span>
+      </div>
+      @if (chapter()?.completed) {
+        <span class="completed-indicator">✓ Lu</span>
+      }
+    </nav>
+
+    <!-- Contenu du chapitre -->
+    <article class="chapter-content">
+      <header class="chapter-header">
+        <h1 class="chapter-title">{{ chapter()?.title }}</h1>
+      </header>
+
+      <div class="chapter-body" [innerHTML]="getRenderedContent()"></div>
+
+      <!-- Actions à la fin du chapitre -->
+      <footer class="chapter-footer">
+        <div class="chapter-actions">
+          @if (!chapter()?.completed) {
+            <button 
+              class="action-btn mark-read"
+              (click)="markAsRead()"
+              [disabled]="markingAsRead()"
+            >
+              @if (markingAsRead()) {
+                <span class="spinner"></span>
+              } @else {
+                <span>✓</span>
+              }
+              Marquer comme lu
+            </button>
+          } @else {
+            <span class="read-badge">✓ Chapitre lu</span>
+          }
+
+          <button class="action-btn quiz" (click)="goToQuiz()">
+            <span>📝</span> Faire le quiz
+          </button>
+        </div>
+      </footer>
+    </article>
+
+    <!-- Navigation inférieure -->
+    <nav class="chapter-nav-bottom">
+      @if (chapter()?.previous) {
+        <button class="nav-btn previous" (click)="goToPrevious()">
+          <span>←</span>
+          <div class="nav-text">
+            <span class="nav-label">Précédent</span>
+            <span class="nav-title">{{ chapter()?.previous?.title }}</span>
+          </div>
+        </button>
+      } @else {
+        <div></div>
+      }
+
+      @if (chapter()?.next) {
+        <button class="nav-btn next" (click)="goToNext()">
+          <div class="nav-text">
+            <span class="nav-label">Suivant</span>
+            <span class="nav-title">{{ chapter()?.next?.title }}</span>
+          </div>
+          <span>→</span>
+        </button>
+      } @else {
+        <div></div>
+      }
+    </nav>
+  }
+</div>

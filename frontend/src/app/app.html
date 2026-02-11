@@ -22,6 +22,9 @@
       <a routerLink="/routine" routerLinkActive="active" (click)="closeSidebar()">Routine Quotidienne</a>
       <a routerLink="/exam" routerLinkActive="active" (click)="closeSidebar()">Simulateur d'Examen</a>
       <a routerLink="/glossary" routerLinkActive="active" (click)="closeSidebar()">📚 Glossaire AWS</a>
+      @if (isAuthenticated()) {
+        <a routerLink="/onboarding" routerLinkActive="active" (click)="closeSidebar()">📖 Histoire AWS</a>
+      }
     </nav>
 
     <!-- Auth Section -->

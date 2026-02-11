@@ -25,6 +25,7 @@
     "db:create-users": "ts-node src/infrastructure/db/create-users-table.ts",
     "db:migrate-attempts": "ts-node src/infrastructure/db/migrate-attempts-auth.ts",
     "db:seed": "ts-node src/infrastructure/db/seed/seed-questions.ts",
+    "db:seed-chapters": "ts-node src/scripts/seed-chapters.ts",
     "questions:enrich": "ts-node src/scripts/enrich-question-bank.ts"
   },
   "dependencies": {
