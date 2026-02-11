@@ -37,7 +37,9 @@ export class Exam implements OnDestroy {
 
   // State
   flags = new Set<string>();
-  answers = new Map<string, string>(); // questionId -> chosen letter
+  // Pour les questions simples: Map<questionId, choice>
+  // Pour les questions multi: Map<questionId, Set<choice>>
+  answers = new Map<string, string | Set<string>>();
 
   // UI
   showGrid = true; // desktop panel on/off
@@ -100,20 +102,57 @@ export class Exam implements OnDestroy {
     return this.questions[this.index] ?? null;
   }
 
+  // Vérifie si la question actuelle est une question à choix multiples
+  isMultiChoice(q: Question | null): boolean {
+    return (q?.requiredAnswers ?? 1) > 1;
+  }
+
   choiceKeys(q: Question): string[] {
     return Object.keys(q.choices ?? {}).sort();
   }
 
+  // Gère la sélection d'une réponse (simple ou multiple)
   pick(choice: string) {
     const q = this.current;
-    if (!q) return;
+    if (!q || this.submittingAttempt) return;
 
-    // V1 rule: lock first answer per question (prevents inflating attempts stats).
-    if (this.answers.has(q.id) || this.submittingAttempt) return;
+    const isMulti = this.isMultiChoice(q);
+    const maxAnswers = q.requiredAnswers;
 
-    // Optimistic local tracking (results work even if API is down).
-    this.answers.set(q.id, choice);
+    if (isMulti) {
+      // Gestion des réponses multiples
+      let currentChoices = this.answers.get(q.id) as Set<string> | undefined;
+      
+      if (!currentChoices) {
+        currentChoices = new Set<string>();
+      } else {
+        // Créer une nouvelle copie pour la réactivité
+        currentChoices = new Set(currentChoices);
+      }
 
+      if (currentChoices.has(choice)) {
+        // Désélectionner si déjà sélectionné
+        currentChoices.delete(choice);
+      } else {
+        // Vérifier qu'on ne dépasse pas le nombre max de réponses
+        if (currentChoices.size < maxAnswers) {
+          currentChoices.add(choice);
+        }
+      }
+
+      // Mettre à jour la Map
+      if (currentChoices.size === 0) {
+        this.answers.delete(q.id);
+      } else {
+        this.answers.set(q.id, currentChoices);
+      }
+    } else {
+      // Gestion des réponses simples
+      // On peut changer la réponse à tout moment
+      this.answers.set(q.id, choice);
+    }
+
+    // Soumettre l'attempt à l'API (non bloquant pour l'UI)
     this.submittingAttempt = true;
     this.api
       .createAttempt({
@@ -133,8 +172,34 @@ export class Exam implements OnDestroy {
       });
   }
 
+  // Vérifie si un choix est sélectionné pour la question courante
+  isChosen(q: Question, choice: string): boolean {
+    const answer = this.answers.get(q.id);
+    if (!answer) return false;
+    
+    if (answer instanceof Set) {
+      return answer.has(choice);
+    }
+    return answer === choice;
+  }
+
+  // Retourne la réponse sélectionnée pour une question simple
   chosenFor(q: Question): string | null {
-    return this.answers.get(q.id) ?? null;
+    const answer = this.answers.get(q.id);
+    if (!answer) return null;
+    if (answer instanceof Set) {
+      return answer.size > 0 ? Array.from(answer).sort().join(',') : null;
+    }
+    return answer;
+  }
+
+  // Retourne le Set de réponses pour une question multiple
+  chosenSetFor(q: Question): Set<string> | null {
+    const answer = this.answers.get(q.id);
+    if (answer instanceof Set) {
+      return answer;
+    }
+    return null;
   }
 
   answeredCount(): number {
@@ -164,11 +229,27 @@ export class Exam implements OnDestroy {
     if (this.index < this.questions.length - 1) this.index += 1;
   }
 
+  // Calcule le score en tenant compte des réponses multiples
   score() {
     let correct = 0;
     for (const q of this.questions) {
-      const a = this.answers.get(q.id);
-      if (a && a === q.answer) correct += 1;
+      const answer = this.answers.get(q.id);
+      if (!answer) continue;
+
+      if (answer instanceof Set) {
+        // Pour les questions multi: toutes les réponses doivent être correctes
+        const correctAnswers = q.answer.split(',').map(a => a.trim()).sort();
+        const selectedAnswers = Array.from(answer).sort();
+        
+        if (JSON.stringify(correctAnswers) === JSON.stringify(selectedAnswers)) {
+          correct += 1;
+        }
+      } else {
+        // Pour les questions simples
+        if (answer === q.answer) {
+          correct += 1;
+        }
+      }
     }
     return {
       correct,

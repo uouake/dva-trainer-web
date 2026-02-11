@@ -61,20 +61,33 @@
           <div class="qhead">
             <span class="badge font-mono muted">{{ index + 1 }}/{{ questions.length }}</span>
             <span class="pill">{{ (q.domainKey ?? 'unknown') === 'development' ? 'Développement' : (q.domainKey ?? 'unknown') === 'security' ? 'Security' : (q.domainKey ?? 'unknown') === 'deployment' ? 'Deployment' : (q.domainKey ?? 'unknown') === 'troubleshooting' ? 'Troubleshooting & Optimization' : 'Unknown' }}</span>
+            <span *ngIf="isMultiChoice(q)" class="pill multi-pill">Multi ({{ q.requiredAnswers }})</span>
             <button class="flag" (click)="toggleFlag()" [attr.aria-label]="isFlagged(q) ? 'Retirer le marqueur de la question ' + (index + 1) : 'Marquer la question ' + (index + 1) + ' pour revision'" [attr.aria-pressed]="isFlagged(q)">{{ isFlagged(q) ? '🚩' : '⚑' }}</button>
           </div>
 
           <pre class="stem" [appGlossaryHandler]="q.stem" [innerHTML]="q.stem | glossary"></pre>
+
+          <!-- Message pour questions multi-réponses -->
+          <div *ngIf="isMultiChoice(q)" class="multi-hint muted">
+            Sélectionnez {{ q.requiredAnswers }} réponses
+            <span *ngIf="chosenSetFor(q) as selected">
+              ({{ selected.size }}/{{ q.requiredAnswers }})
+            </span>
+          </div>
 
           <div class="choices">
             <button
               class="choice"
               *ngFor="let k of choiceKeys(q)"
               (click)="pick(k)"
-              [disabled]="submittingAttempt || answers.has(q.id)"
-              [class.selected]="chosenFor(q) === k"
+              [disabled]="submittingAttempt"
+              [class.selected]="isChosen(q, k)"
+              [class.multi-choice]="isMultiChoice(q)"
               [appGlossaryHandler]="q.choices[k]"
             >
+              <div class="choice-indicator" [class.checkbox]="isMultiChoice(q)" [class.radio]="!isMultiChoice(q)" [class.checked]="isChosen(q, k)">
+                <span *ngIf="isChosen(q, k)">✓</span>
+              </div>
               <div class="choice-k">{{ k }}</div>
               <div class="choice-body" [innerHTML]="q.choices[k] | glossary"></div>
             </button>

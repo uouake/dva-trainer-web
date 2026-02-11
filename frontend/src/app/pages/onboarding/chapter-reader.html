@@ -54,10 +54,6 @@
           } @else {
             <span class="read-badge">✓ Chapitre lu</span>
           }
-
-          <button class="action-btn quiz" (click)="goToQuiz()">
-            <span>📝</span> Faire le quiz
-          </button>
         </div>
       </footer>
     </article>
@@ -69,7 +65,7 @@
           <span>←</span>
           <div class="nav-text">
             <span class="nav-label">Précédent</span>
-            <span class="nav-title">{{ chapter()?.previous?.title }}</span>
+            <span class="nav-title">Chapitre précédent</span>
           </div>
         </button>
       } @else {
@@ -80,7 +76,7 @@
         <button class="nav-btn next" (click)="goToNext()">
           <div class="nav-text">
             <span class="nav-label">Suivant</span>
-            <span class="nav-title">{{ chapter()?.next?.title }}</span>
+            <span class="nav-title">Chapitre suivant</span>
           </div>
           <span>→</span>
         </button>
