@@ -5,11 +5,12 @@ import { environment } from '../../../environments/environment';
 
 export interface Flashcard {
   id: string;
-  conceptKey: string;
-  front: string;
-  back: string;
+  conceptKey?: string;
+  question: string;
+  answer: string;
   category: string;
-  difficulty: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  tags?: string[];
 }
 
 export interface FlashcardProgress {

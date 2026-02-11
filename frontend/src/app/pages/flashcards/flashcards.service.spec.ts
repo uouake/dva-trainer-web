@@ -9,11 +9,11 @@ describe('FlashcardsService', () => {
 
   const mockFlashcard = {
     id: '1',
-    conceptKey: 'lambda',
-    front: "C'est quoi Lambda ?",
-    back: 'Un Robot Cuisinier',
+    question: "C'est quoi Lambda ?",
+    answer: 'Un Robot Cuisinier',
     category: 'Compute',
-    difficulty: 1,
+    difficulty: 'easy' as const,
+    tags: ['serverless'],
   };
 
   beforeEach(() => {

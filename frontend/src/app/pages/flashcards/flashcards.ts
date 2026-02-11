@@ -1,7 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FlashcardsService, Flashcard } from './flashcards.service';
+import { FlashcardsService, Flashcard, FlashcardStats } from './flashcards.service';
+
+type FlashcardState = 'loading' | 'empty' | 'study' | 'summary' | 'error';
+type FlipState = 'front' | 'back';
 
 @Component({
   selector: 'app-flashcards',
@@ -13,86 +16,165 @@ import { FlashcardsService, Flashcard } from './flashcards.service';
 export class FlashcardsPage implements OnInit {
   private readonly flashcardsService = inject(FlashcardsService);
 
-  // Signals pour l'état
+  // State signals
+  state = signal<FlashcardState>('loading');
   flashcards = signal<Flashcard[]>([]);
   currentIndex = signal(0);
-  isFlipped = signal(false);
-  loading = signal(true);
-  error = signal<string | null>(null);
-  sessionComplete = signal(false);
-  progress = signal({ known: 0, review: 0, total: 0 });
+  flipState = signal<FlipState>('front');
+  stats = signal<FlashcardStats | null>(null);
+  sessionResults = signal<{ known: number; review: number }>({ known: 0, review: 0 });
+  errorMessage = signal<string>('');
+
+  // Computed signals
+  currentFlashcard = computed(() => {
+    const cards = this.flashcards();
+    const index = this.currentIndex();
+    return cards[index] || null;
+  });
+
+  progressPercentage = computed(() => {
+    const total = this.flashcards().length;
+    if (total === 0) return 0;
+    return ((this.currentIndex() + 1) / total) * 100;
+  });
+
+  progressText = computed(() => {
+    const current = this.currentIndex() + 1;
+    const total = this.flashcards().length;
+    return `${current} / ${total}`;
+  });
+
+  isLastCard = computed(() => {
+    return this.currentIndex() >= this.flashcards().length - 1;
+  });
+
+  canFlip = computed(() => {
+    return this.state() === 'study' && this.currentFlashcard() !== null;
+  });
 
   ngOnInit(): void {
-    this.loadFlashcards();
+    this.loadSession();
   }
 
-  private loadFlashcards(): void {
-    this.loading.set(true);
-    this.error.set(null);
+  private loadSession(): void {
+    this.state.set('loading');
+    this.errorMessage.set('');
 
-    this.flashcardsService.getRandomFlashcards(10).subscribe({
-      next: (cards) => {
-        this.flashcards.set(cards);
-        this.progress.update(p => ({ ...p, total: cards.length }));
-        this.loading.set(false);
-      },
-      error: (err) => {
+    // Charger les flashcards et les stats en parallèle
+    Promise.all([
+      this.flashcardsService.getRandomFlashcards(10).toPromise(),
+      this.flashcardsService.getStats().toPromise(),
+    ])
+      .then(([flashcards, stats]) => {
+        if (flashcards && flashcards.length > 0) {
+          this.flashcards.set(flashcards);
+          this.stats.set(stats || null);
+          this.currentIndex.set(0);
+          this.flipState.set('front');
+          this.sessionResults.set({ known: 0, review: 0 });
+          this.state.set('study');
+        } else {
+          this.state.set('empty');
+        }
+      })
+      .catch((err) => {
         console.error('Failed to load flashcards:', err);
-        this.error.set('Impossible de charger les flashcards. Veuillez réessayer.');
-        this.loading.set(false);
-      },
-    });
-  }
-
-  get currentCard(): Flashcard | null {
-    return this.flashcards()[this.currentIndex()] || null;
+        this.errorMessage.set('Impossible de charger les flashcards. Veuillez réessayer.');
+        this.state.set('error');
+      });
   }
 
   flipCard(): void {
-    this.isFlipped.update(f => !f);
-  }
-
-  nextCard(): void {
-    if (this.currentIndex() < this.flashcards().length - 1) {
-      this.isFlipped.set(false);
-      setTimeout(() => {
-        this.currentIndex.update(i => i + 1);
-      }, 150);
-    } else {
-      this.sessionComplete.set(true);
-    }
+    if (!this.canFlip()) return;
+    this.flipState.update(state => state === 'front' ? 'back' : 'front');
   }
 
   markAsKnown(): void {
-    const card = this.currentCard;
-    if (card) {
-      this.flashcardsService.saveProgress(card.id, true).subscribe();
-      this.progress.update(p => ({ ...p, known: p.known + 1 }));
-    }
-    this.nextCard();
+    this.handleAnswer(true);
   }
 
   markForReview(): void {
-    const card = this.currentCard;
-    if (card) {
-      this.flashcardsService.saveProgress(card.id, false).subscribe();
-      this.progress.update(p => ({ ...p, review: p.review + 1 }));
+    this.handleAnswer(false);
+  }
+
+  private handleAnswer(known: boolean): void {
+    const currentCard = this.currentFlashcard();
+    if (!currentCard) return;
+
+    // Sauvegarder la progression
+    this.flashcardsService.saveProgress(currentCard.id, known).subscribe({
+      error: (err) => console.error('Failed to save progress:', err),
+    });
+
+    // Mettre à jour les résultats de session
+    this.sessionResults.update(results => ({
+      known: results.known + (known ? 1 : 0),
+      review: results.review + (known ? 0 : 1),
+    }));
+
+    // Passer à la carte suivante ou afficher le résumé
+    if (this.isLastCard()) {
+      this.state.set('summary');
+    } else {
+      this.currentIndex.update(index => index + 1);
+      this.flipState.set('front');
     }
-    this.nextCard();
   }
 
-  restartSession(): void {
-    this.currentIndex.set(0);
-    this.isFlipped.set(false);
-    this.sessionComplete.set(false);
-    this.progress.set({ known: 0, review: 0, total: this.flashcards().length });
-    this.loadFlashcards();
+  nextCard(): void {
+    if (this.isLastCard()) {
+      this.state.set('summary');
+    } else {
+      this.currentIndex.update(index => index + 1);
+      this.flipState.set('front');
+    }
   }
 
-  getProgressWidth(): string {
-    const total = this.progress().total;
-    if (total === 0) return '0%';
-    const current = this.currentIndex() + (this.sessionComplete() ? 1 : 0);
-    return `${(current / total) * 100}%`;
+  previousCard(): void {
+    if (this.currentIndex() > 0) {
+      this.currentIndex.update(index => index - 1);
+      this.flipState.set('front');
+    }
+  }
+
+  startNewSession(): void {
+    this.loadSession();
+  }
+
+  retryLoading(): void {
+    this.loadSession();
+  }
+
+  getDifficultyLabel(difficulty: string): string {
+    switch (difficulty) {
+      case 'easy':
+        return 'Facile';
+      case 'medium':
+        return 'Moyen';
+      case 'hard':
+        return 'Difficile';
+      default:
+        return 'Inconnu';
+    }
+  }
+
+  getDifficultyColor(difficulty: string): string {
+    switch (difficulty) {
+      case 'easy':
+        return 'easy';
+      case 'medium':
+        return 'medium';
+      case 'hard':
+        return 'hard';
+      default:
+        return '';
+    }
+  }
+
+  getSuccessRate(): number {
+    const results = this.sessionResults();
+    const total = results.known + results.review;
+    if (total === 0) return 0;
+    return Math.round((results.known / total) * 100);
   }
 }
