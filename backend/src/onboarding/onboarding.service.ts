@@ -12,6 +12,7 @@ export interface ChapterListItem {
   number: number;
   title: string;
   type: string;
+  season: number;
   completed: boolean;
   quizScore: number | null;
 }
@@ -74,6 +75,7 @@ export class OnboardingService {
         number: chapter.number,
         title: chapter.title,
         type: chapter.type,
+        season: chapter.season || 1,
         completed: !!userProgress?.completedAt,
         quizScore: userProgress?.quizScore ?? null,
       };
@@ -101,6 +103,7 @@ export class OnboardingService {
       number: chapter.number,
       title: chapter.title,
       type: chapter.type,
+      season: chapter.season || 1,
       content: chapter.content,
       conceptKeys: chapter.conceptKeys,
       completed: !!progress?.completedAt,
@@ -148,6 +151,7 @@ export class OnboardingService {
         number: chapter.number,
         title: chapter.title,
         type: chapter.type,
+        season: chapter.season || 1,
         completed: !!userProgress?.completedAt,
         quizScore: userProgress?.quizScore ?? null,
       };

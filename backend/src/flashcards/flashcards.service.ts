@@ -12,11 +12,24 @@ export class FlashcardsService {
     private progressRepo: Repository<FlashcardProgressEntity>,
   ) {}
 
-  async findAll(): Promise<FlashcardEntity[]> {
-    return this.flashcardRepo.find({ order: { category: 'ASC', conceptKey: 'ASC' } });
+  private mapToDto(card: FlashcardEntity) {
+    return {
+      id: card.id,
+      conceptKey: card.conceptKey,
+      question: card.front,
+      answer: card.back,
+      category: card.category,
+      difficulty: card.difficulty === 1 ? 'easy' : card.difficulty === 2 ? 'medium' : 'hard',
+      tags: [],
+    };
   }
 
-  async findRandom(count: number, userId: string): Promise<FlashcardEntity[]> {
+  async findAll(): Promise<any[]> {
+    const cards = await this.flashcardRepo.find({ order: { category: 'ASC', conceptKey: 'ASC' } });
+    return cards.map(c => this.mapToDto(c));
+  }
+
+  async findRandom(count: number, userId: string): Promise<any[]> {
     // Get IDs of cards already reviewed by user
     const reviewedIds = await this.progressRepo
       .createQueryBuilder('p')
@@ -48,7 +61,7 @@ export class FlashcardsService {
       cards = [...cards, ...additionalCards];
     }
     
-    return cards.slice(0, count);
+    return cards.slice(0, count).map(c => this.mapToDto(c));
   }
 
   async saveProgress(userId: string, flashcardId: string, known: boolean): Promise<void> {
