@@ -34,10 +34,10 @@ export class FlashcardProgressEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'uuid', name: 'user_id' })
+  @Column({ type: 'text', name: 'user_id' })
   userId!: string;
 
-  @Column({ type: 'uuid', name: 'flashcard_id' })
+  @Column({ type: 'text', name: 'flashcard_id' })
   flashcardId!: string;
 
   @Column({ type: 'boolean', default: false })

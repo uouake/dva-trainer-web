@@ -65,25 +65,39 @@ export class FlashcardsService {
   }
 
   async saveProgress(userId: string, flashcardId: string, known: boolean): Promise<void> {
-    let progress = await this.progressRepo.findOne({
-      where: { userId, flashcardId },
-    });
-
-    if (progress) {
-      progress.known = known;
-      progress.reviewCount += 1;
-      progress.lastReviewedAt = new Date();
-    } else {
-      progress = this.progressRepo.create({
-        userId,
-        flashcardId,
-        known,
-        reviewCount: 1,
-        lastReviewedAt: new Date(),
+    try {
+      // Vérifier que la flashcard existe
+      const flashcard = await this.flashcardRepo.findOne({
+        where: { id: flashcardId },
       });
-    }
+      
+      if (!flashcard) {
+        throw new Error(`Flashcard ${flashcardId} not found`);
+      }
 
-    await this.progressRepo.save(progress);
+      let progress = await this.progressRepo.findOne({
+        where: { userId, flashcardId },
+      });
+
+      if (progress) {
+        progress.known = known;
+        progress.reviewCount = (progress.reviewCount || 0) + 1;
+        progress.lastReviewedAt = new Date();
+      } else {
+        progress = this.progressRepo.create({
+          userId,
+          flashcardId,
+          known,
+          reviewCount: 1,
+          lastReviewedAt: new Date(),
+        });
+      }
+
+      await this.progressRepo.save(progress);
+    } catch (error) {
+      console.error('Error saving flashcard progress:', error);
+      throw error;
+    }
   }
 
   async getStats(userId: string): Promise<any> {
