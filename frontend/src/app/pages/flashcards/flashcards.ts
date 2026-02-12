@@ -101,8 +101,14 @@ export class FlashcardsPage implements OnInit {
     const currentCard = this.currentFlashcard();
     if (!currentCard) return;
 
-    // Sauvegarder la progression
+    // Sauvegarder la progression et rafraîchir les stats
     this.flashcardsService.saveProgress(currentCard.id, known).subscribe({
+      next: () => {
+        // Rafraîchir les stats après sauvegarde
+        this.flashcardsService.getStats().subscribe(stats => {
+          this.stats.set(stats);
+        });
+      },
       error: (err) => console.error('Failed to save progress:', err),
     });
 
