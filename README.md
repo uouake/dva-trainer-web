@@ -44,19 +44,19 @@ DVA Trainer is a comprehensive learning platform designed to help developers pre
     <td align="center">
       <img src="screenshots/questions.png" alt="Questions" width="400"/>
       <br/>
-      <em>Interactive practice questions</em>
+      <em>AWS's glossary</em>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="screenshots/flashcards.png" alt="Flashcards" width="400"/>
       <br/>
-      <em>Spaced repetition flashcards</em>
+      <em>Manga-style onboarding story</em>
     </td>
     <td align="center">
       <img src="screenshots/onboarding.png" alt="Onboarding" width="400"/>
       <br/>
-      <em>Manga-style onboarding story</em>
+      <em>Spaced repetition flashcards</em>
     </td>
   </tr>
 </table>
